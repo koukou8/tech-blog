@@ -1,0 +1,20 @@
+---
+interface Props {
+  tags: string[];
+}
+const { tags } = Astro.props;
+---
+
+<div class="animate-slide-up mt-10 flex flex-wrap items-center gap-5 rounded-2xl border-2 border-fg bg-bg-card px-7 py-5 shadow-[3px_3px_0_var(--color-fg)] max-sm:px-5 max-sm:py-4" style="animation-delay: 0.5s;">
+  <span class="whitespace-nowrap font-heading text-[0.85rem] font-extrabold">Tags</span>
+  <div class="flex flex-wrap gap-1.5">
+    {tags.map((tag) => (
+      <a
+        href={`/tags/${tag}`}
+        class="whitespace-nowrap rounded-full border-2 border-border px-3 py-1 font-mono text-[0.66rem] text-fg-secondary no-underline transition-all hover:border-accent hover:bg-accent-light hover:text-accent-dark"
+      >
+        {tag}
+      </a>
+    ))}
+  </div>
+</div>

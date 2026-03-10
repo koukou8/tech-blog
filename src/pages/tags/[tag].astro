@@ -1,0 +1,102 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ArticleCard from '../../components/ArticleCard.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  const allTags = [...new Set(posts.flatMap((p) => p.data.tags))];
+
+  const paths = allTags.map((tag) => ({
+    params: { tag },
+    props: {
+      tag,
+      posts: posts
+        .filter((p) => p.data.tags.includes(tag))
+        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+    },
+  }));
+
+  // "all" tag shows every post
+  paths.push({
+    params: { tag: 'all' },
+    props: {
+      tag: 'all',
+      posts: posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
+    },
+  });
+
+  return paths;
+}
+
+const { tag, posts } = Astro.props;
+
+const allPosts = await getCollection('blog');
+const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
+
+const gradients: Array<'v1' | 'v2' | 'v3'> = ['v1', 'v2', 'v3'];
+---
+
+<BaseLayout title={`${tag === 'all' ? 'All Articles' : tag} — because I love tech`}>
+  <div class="relative z-1 mx-auto max-w-[1200px] px-8 pt-12 pb-20 max-sm:px-5 max-sm:pt-8">
+    <div class="animate-slide-up mb-8">
+      <h1 class="mb-3 font-heading text-[clamp(1.5rem,3.5vw,2.2rem)] font-extrabold tracking-tight">
+        {tag === 'all' ? (
+          <>
+            <span class="inline-block h-3 w-3 rounded-full bg-accent"></span>{' '}
+            All Articles
+          </>
+        ) : (
+          <>
+            Tag: <span class="inline-block -rotate-1 rounded-lg bg-accent px-2 py-0.5 text-white">{tag}</span>
+          </>
+        )}
+      </h1>
+      <p class="text-[0.9rem] text-fg-secondary">
+        {posts.length} article{posts.length !== 1 ? 's' : ''}
+      </p>
+    </div>
+
+    <!-- Tag navigation -->
+    <div class="mb-8 flex flex-wrap gap-1.5">
+      <a
+        href="/tags/all"
+        class:list={[
+          "whitespace-nowrap rounded-full border-2 px-3 py-1 font-mono text-[0.66rem] no-underline transition-all",
+          tag === 'all'
+            ? "border-accent bg-accent text-white"
+            : "border-border text-fg-secondary hover:border-accent hover:bg-accent-light hover:text-accent-dark"
+        ]}
+      >
+        All
+      </a>
+      {allTags.map((t) => (
+        <a
+          href={`/tags/${t}`}
+          class:list={[
+            "whitespace-nowrap rounded-full border-2 px-3 py-1 font-mono text-[0.66rem] no-underline transition-all",
+            tag === t
+              ? "border-accent bg-accent text-white"
+              : "border-border text-fg-secondary hover:border-accent hover:bg-accent-light hover:text-accent-dark"
+          ]}
+        >
+          {t}
+        </a>
+      ))}
+    </div>
+
+    <div class="grid grid-cols-3 gap-[1.15rem] max-[960px]:grid-cols-2 max-sm:grid-cols-1">
+      {posts.map((post, i) => (
+        <ArticleCard
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          tags={post.data.tags}
+          slug={post.id}
+          gradient={gradients[i % 3]}
+          category={post.data.category}
+        />
+      ))}
+    </div>
+  </div>
+</BaseLayout>

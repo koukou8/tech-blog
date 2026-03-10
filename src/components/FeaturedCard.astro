@@ -1,0 +1,77 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  date: Date;
+  tags: string[];
+  slug: string;
+  category?: string;
+}
+
+const { title, description, date, tags, slug, category } = Astro.props;
+
+const tagColorMap: Record<string, { bg: string; text: string }> = {
+  'Next.js': { bg: 'bg-sky-light', text: 'text-[#0284c7]' },
+  'React': { bg: 'bg-purple-light', text: 'text-[#7c3aed]' },
+  'TypeScript': { bg: 'bg-sky-light', text: 'text-[#0284c7]' },
+  'Cloudflare': { bg: 'bg-accent-light', text: 'text-accent-dark' },
+  'Workers': { bg: 'bg-pink-light', text: 'text-[#db2777]' },
+  'Architecture': { bg: 'bg-lime-light', text: 'text-[#4d7c0f]' },
+  'Patterns': { bg: 'bg-purple-light', text: 'text-[#7c3aed]' },
+};
+
+const defaultTagColor = { bg: 'bg-accent-light', text: 'text-accent-dark' };
+
+const formattedDate = date.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
+---
+
+<a href={`/articles/${slug}`} class="card-hover col-span-full flex flex-row overflow-hidden rounded-2xl border-2 border-fg bg-bg-card no-underline shadow-[3px_3px_0_var(--color-fg)] max-[960px]:flex-col">
+  <div class="relative flex w-[370px] min-h-[210px] shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-[#1e3a5f] to-[#0c0c0c] max-[960px]:w-full max-[960px]:min-h-[170px]">
+    {category && (
+      <span class="absolute top-3 left-3 z-2 rounded-lg border-2 border-fg bg-bg-card px-2.5 py-1 font-mono text-[0.58rem] font-bold uppercase tracking-wider text-fg">
+        {category}
+      </span>
+    )}
+    <div class="relative z-1 w-full px-5 py-5 font-mono text-[0.62rem] leading-[1.8] text-white/55">
+      <span class="text-white/25">// app router structure</span><br>
+      <span class="text-[#93c5fd]">src/</span><br>
+      &nbsp;&nbsp;<span class="text-[#fde68a]">features/</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#86efac]">auth/</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#86efac]">dashboard/</span><br>
+      &nbsp;&nbsp;<span class="text-[#fde68a]">shared/</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#86efac]">components/</span>
+    </div>
+  </div>
+  <div class="flex flex-1 flex-col p-[1.4rem]">
+    <span class="mb-1.5 font-mono text-[0.62rem] text-fg-muted">{formattedDate}</span>
+    <h3 class="mb-1.5 font-heading text-[1.3rem] font-bold leading-[1.45] tracking-tight text-fg">{title}</h3>
+    <p class="mb-3.5 flex-1 text-[0.82rem] leading-[1.75] text-fg-secondary">{description}</p>
+    <div class="mt-auto flex items-center justify-between">
+      <div class="flex flex-wrap gap-1.5">
+        {tags.slice(0, 3).map((tag) => {
+          const colors = tagColorMap[tag] || defaultTagColor;
+          return (
+            <span class={`rounded-lg px-2 py-0.5 font-mono text-[0.56rem] ${colors.bg} ${colors.text}`}>
+              {tag}
+            </span>
+          );
+        })}
+      </div>
+      <div class="card-arrow flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-border transition-all">
+        <svg class="h-[13px] w-[13px] stroke-fg-muted transition-colors" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
+          <path d="M5 12h14M12 5l7 7-7 7"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</a>
+
+<style>
+  a:hover .card-arrow {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+  a:hover .card-arrow svg {
+    stroke: white;
+  }
+</style>

@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>because I love tech</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --fg: #1a1a1a;
+      --fg-secondary: #6b6b6b;
+      --fg-tertiary: #999;
+      --bg: #fafaf9;
+      --bg-card: #ffffff;
+      --bg-tag: #f0efed;
+      --border: #e8e6e1;
+      --accent: #c45d3e;
+      --accent-soft: #f5ebe7;
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'Outfit', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--fg);
+      font-weight: 300;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(250, 250, 249, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.35rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+      color: var(--fg);
+      text-decoration: none;
+      font-style: italic;
+    }
+
+    .logo span {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    nav { display: flex; gap: 2rem; align-items: center; }
+
+    nav a {
+      font-size: 0.82rem;
+      font-weight: 400;
+      color: var(--fg-secondary);
+      text-decoration: none;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1.5px;
+      background: var(--accent);
+      transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    nav a:hover { color: var(--fg); }
+    nav a:hover::after { width: 100%; }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      width: 28px;
+      height: 20px;
+      position: relative;
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 100%;
+      height: 1.5px;
+      background: var(--fg);
+      position: absolute;
+      left: 0;
+      transition: all 0.3s;
+    }
+
+    .menu-toggle span:nth-child(1) { top: 0; }
+    .menu-toggle span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+    .menu-toggle span:nth-child(3) { bottom: 0; }
+
+    /* ===== HERO ===== */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5rem 2rem 4rem;
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      right: 2rem;
+      top: 3rem;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--accent-soft) 0%, transparent 70%);
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .hero-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      font-weight: 500;
+    }
+
+    .hero h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 5vw, 4rem);
+      font-weight: 400;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      max-width: 700px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--accent);
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--fg-secondary);
+      max-width: 520px;
+      line-height: 1.8;
+    }
+
+    .hero-divider {
+      width: 48px;
+      height: 1.5px;
+      background: var(--accent);
+      margin: 2rem 0;
+      opacity: 0.5;
+    }
+
+    /* ===== MAIN LAYOUT ===== */
+    .main-layout {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 6rem;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    /* ===== SECTION HEADING ===== */
+    .section-heading {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-heading h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      font-weight: 400;
+    }
+
+    .section-heading .line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ===== ARTICLE CARDS ===== */
+    .articles { display: flex; flex-direction: column; gap: 1px; }
+
+    .article-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      margin-bottom: 1.25rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .article-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 0;
+      background: var(--accent);
+      transition: height 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      border-radius: 0 2px 2px 0;
+    }
+
+    .article-card:hover {
+      border-color: #d5d3cd;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.04);
+    }
+
+    .article-card:hover::before { height: 100%; }
+
+    .article-meta {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .article-date {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--fg-tertiary);
+      letter-spacing: 0.04em;
+    }
+
+    .article-category {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .article-card h3 {
+      font-family: var(--font-body);
+      font-size: 1.15rem;
+      font-weight: 500;
+      line-height: 1.5;
+      margin-bottom: 0.6rem;
+      letter-spacing: -0.005em;
+    }
+
+    .article-card p {
+      font-size: 0.9rem;
+      color: var(--fg-secondary);
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+
+    .article-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+    .tag {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 500;
+      padding: 0.25rem 0.65rem;
+      background: var(--bg-tag);
+      border-radius: 4px;
+      color: var(--fg-secondary);
+      letter-spacing: 0.02em;
+      transition: all 0.2s;
+    }
+
+    .article-card:hover .tag {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+
+    .read-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--accent);
+      margin-top: 0.5rem;
+      letter-spacing: 0.02em;
+    }
+
+    .read-more svg {
+      width: 14px;
+      height: 14px;
+      transition: transform 0.2s;
+    }
+
+    .article-card:hover .read-more svg {
+      transform: translateX(3px);
+    }
+
+    /* ===== SIDEBAR ===== */
+    .sidebar {
+      position: sticky;
+      top: 88px;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .sidebar-section h3 {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 400;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Tag Cloud */
+    .tag-cloud {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag-cloud a {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      font-weight: 400;
+      padding: 0.35rem 0.75rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--fg-secondary);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      transition: all 0.2s;
+    }
+
+    .tag-cloud a:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .tag-cloud a .count {
+      color: var(--fg-tertiary);
+      margin-left: 0.3rem;
+      font-size: 0.6rem;
+    }
+
+    /* Recent Articles */
+    .recent-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .recent-list li a {
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      padding: 0.75rem;
+      border-radius: 6px;
+      transition: background 0.2s;
+    }
+
+    .recent-list li a:hover {
+      background: var(--bg-card);
+    }
+
+    .recent-list .recent-title {
+      font-size: 0.85rem;
+      font-weight: 400;
+      line-height: 1.5;
+    }
+
+    .recent-list .recent-date {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--fg-tertiary);
+    }
+
+    /* About mini */
+    .about-mini {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+    }
+
+    .about-mini .avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-soft), #e8e6e1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--accent);
+      margin-bottom: 1rem;
+    }
+
+    .about-mini .name {
+      font-weight: 500;
+      font-size: 0.9rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .about-mini .bio {
+      font-size: 0.8rem;
+      color: var(--fg-secondary);
+      line-height: 1.7;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 3rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-left {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      color: var(--fg-secondary);
+      font-style: italic;
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .footer-links a {
+      color: var(--fg-tertiary);
+      text-decoration: none;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--accent); }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-label { animation: fadeUp 0.6s ease-out both; }
+    .hero h1 { animation: fadeUp 0.6s ease-out 0.1s both; }
+    .hero-divider { animation: fadeUp 0.6s ease-out 0.2s both; }
+    .hero p { animation: fadeUp 0.6s ease-out 0.25s both; }
+
+    .article-card:nth-child(1) { animation: fadeUp 0.5s ease-out 0.3s both; }
+    .article-card:nth-child(2) { animation: fadeUp 0.5s ease-out 0.4s both; }
+    .article-card:nth-child(3) { animation: fadeUp 0.5s ease-out 0.5s both; }
+
+    .sidebar { animation: fadeUp 0.5s ease-out 0.45s both; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 900px) {
+      .main-layout {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+      }
+      .sidebar {
+        position: static;
+        order: 2;
+      }
+    }
+
+    @media (max-width: 640px) {
+      nav { display: none; }
+      .menu-toggle { display: block; }
+      .hero { padding: 3rem 1.25rem 2.5rem; }
+      .main-layout { padding: 0 1.25rem 4rem; }
+      .header-inner { padding: 0 1.25rem; }
+      .article-card { padding: 1.5rem; }
+      .footer-inner { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-inner">
+      <a href="#" class="logo">because I love <span>tech</span></a>
+      <nav>
+        <a href="#">Home</a>
+        <a href="#">Articles</a>
+        <a href="#">Tags</a>
+        <a href="#">About</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-label">// Personal Tech Blog</div>
+    <h1>技術と向き合う日々を、<em>丁寧に</em>記録する</h1>
+    <div class="hero-divider"></div>
+    <p>Web開発・クラウドインフラ・アーキテクチャ設計について、実務で得た知見を発信しています。</p>
+  </section>
+
+  <!-- MAIN -->
+  <div class="main-layout">
+    <main>
+      <div class="section-heading">
+        <h2>Recent Articles</h2>
+        <div class="line"></div>
+      </div>
+
+      <div class="articles">
+        <!-- Article 1 -->
+        <a href="#" class="article-card">
+          <div class="article-meta">
+            <span class="article-date">2026.01.28</span>
+            <span class="article-category">Architecture</span>
+          </div>
+          <h3>Next.js App Router で考える大規模アプリケーションのディレクトリ設計</h3>
+          <p>App Router の登場により、Next.js のプロジェクト構造は大きく変わりました。Feature-Sliced Design を参考に、実務で採用した設計パターンとその判断基準を整理します。</p>
+          <div class="article-tags">
+            <span class="tag">Next.js</span>
+            <span class="tag">React</span>
+            <span class="tag">Architecture</span>
+          </div>
+          <div class="read-more">
+            続きを読む
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <!-- Article 2 -->
+        <a href="#" class="article-card">
+          <div class="article-meta">
+            <span class="article-date">2026.01.15</span>
+            <span class="article-category">Infrastructure</span>
+          </div>
+          <h3>Cloudflare Workers + D1 で実現するエッジコンピューティングの実践</h3>
+          <p>サーバーレスの次のステップとして注目されるエッジコンピューティング。Cloudflare Workers と D1 データベースを組み合わせたAPIの構築手順と、パフォーマンス計測の結果を共有します。</p>
+          <div class="article-tags">
+            <span class="tag">Cloudflare</span>
+            <span class="tag">Workers</span>
+            <span class="tag">Edge Computing</span>
+          </div>
+          <div class="read-more">
+            続きを読む
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+
+        <!-- Article 3 -->
+        <a href="#" class="article-card">
+          <div class="article-meta">
+            <span class="article-date">2026.01.03</span>
+            <span class="article-category">TypeScript</span>
+          </div>
+          <h3>TypeScript の型パズルを超えて ― 実務で本当に役立つ型設計のパターン集</h3>
+          <p>Conditional Types や Template Literal Types は強力ですが、複雑すぎる型はメンテナンスコストを増大させます。チーム開発で「ちょうどいい型安全」を実現するための実践的なパターンをまとめました。</p>
+          <div class="article-tags">
+            <span class="tag">TypeScript</span>
+            <span class="tag">Design Patterns</span>
+          </div>
+          <div class="read-more">
+            続きを読む
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </div>
+        </a>
+      </div>
+    </main>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <!-- About -->
+      <div class="sidebar-section">
+        <div class="about-mini">
+          <div class="avatar">K</div>
+          <div class="name">Kouki Yoshida</div>
+          <div class="bio">Webエンジニア。フロントエンドからインフラまで幅広く触っています。技術の「なぜ」を大切にしながら書いています。</div>
+        </div>
+      </div>
+
+      <!-- Tags -->
+      <div class="sidebar-section">
+        <h3>Tags</h3>
+        <div class="tag-cloud">
+          <a href="#">Next.js <span class="count">12</span></a>
+          <a href="#">React <span class="count">9</span></a>
+          <a href="#">TypeScript <span class="count">15</span></a>
+          <a href="#">AWS <span class="count">7</span></a>
+          <a href="#">Cloudflare <span class="count">5</span></a>
+          <a href="#">Docker <span class="count">4</span></a>
+          <a href="#">Node.js <span class="count">6</span></a>
+          <a href="#">GraphQL <span class="count">3</span></a>
+          <a href="#">Rust <span class="count">2</span></a>
+          <a href="#">CI/CD <span class="count">4</span></a>
+        </div>
+      </div>
+
+      <!-- Recent -->
+      <div class="sidebar-section">
+        <h3>Recent</h3>
+        <ul class="recent-list">
+          <li>
+            <a href="#">
+              <span class="recent-title">Vitest と Testing Library で始めるコンポーネントテスト</span>
+              <span class="recent-date">2025.12.22</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <span class="recent-title">pnpm workspace によるモノレポ構成の勘所</span>
+              <span class="recent-date">2025.12.10</span>
+            </a>
+          </li>
+          <li>
+            <a href="#">
+              <span class="recent-title">GitHub Actions のキャッシュ戦略を見直してビルド時間を半減させた話</span>
+              <span class="recent-date">2025.11.28</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </aside>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-left">because I love tech &mdash; &copy; 2026</div>
+      <div class="footer-links">
+        <a href="#">GitHub</a>
+        <a href="#">X (Twitter)</a>
+        <a href="#">RSS</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

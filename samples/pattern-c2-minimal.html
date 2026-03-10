@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>because I love tech — Minimal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #fafafa;
+      --bg-card: #fafafa;
+      --fg: #171717;
+      --fg-secondary: #737373;
+      --fg-muted: #b0b0b0;
+      --border: #e5e5e5;
+      --accent: #171717;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Sora', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --radius: 8px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--fg);
+      font-weight: 300;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    ::selection { background: var(--fg); color: var(--bg); }
+
+    /* ===== HEADER ===== */
+    header {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(250,250,250,0.9);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+
+    .header-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: -0.03em;
+    }
+
+    nav { display: flex; gap: 1.5rem; align-items: center; }
+
+    nav a {
+      font-size: 0.75rem;
+      font-weight: 400;
+      color: var(--fg-secondary);
+      text-decoration: none;
+      transition: color 0.15s;
+      letter-spacing: -0.01em;
+    }
+
+    nav a:hover, nav a.active { color: var(--fg); }
+
+    .menu-toggle {
+      display: none; background: none; border: none; cursor: pointer;
+      width: 24px; height: 18px; position: relative;
+    }
+    .menu-toggle span {
+      display: block; width: 100%; height: 1px; background: var(--fg);
+      position: absolute; left: 0; transition: 0.3s;
+    }
+    .menu-toggle span:nth-child(1) { top: 0; }
+    .menu-toggle span:nth-child(2) { top: 50%; }
+    .menu-toggle span:nth-child(3) { bottom: 0; }
+
+    /* ===== HERO ===== */
+    .hero {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+    }
+
+    .hero h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.2rem, 4.5vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.04em;
+      margin-bottom: 1rem;
+      max-width: 600px;
+    }
+
+    .hero p {
+      font-size: 0.9rem;
+      color: var(--fg-secondary);
+      max-width: 420px;
+      line-height: 1.8;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 2rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .hero-meta-item .number {
+      font-family: var(--font-mono);
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .hero-meta-item .label {
+      font-size: 0.65rem;
+      color: var(--fg-muted);
+      letter-spacing: 0.04em;
+      margin-top: 0.15rem;
+    }
+
+    /* ===== DIVIDER ===== */
+    .section-divider {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .section-divider hr {
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ===== MAIN ===== */
+    .main-content {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 3rem 2rem 5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+    }
+
+    .section-header h2 {
+      font-family: var(--font-heading);
+      font-size: 0.75rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--fg-secondary);
+    }
+
+    .section-header .view-all {
+      font-size: 0.72rem;
+      color: var(--fg-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .section-header .view-all:hover { color: var(--fg); }
+
+    /* ===== CARDS — no border, no shadow, pure minimal ===== */
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .article-card {
+      background: var(--bg-card);
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.2s;
+    }
+
+    .article-card:hover { background: #f0f0f0; }
+
+    .article-card.featured {
+      grid-column: 1 / -1;
+      flex-direction: row;
+    }
+
+    .card-visual {
+      height: 140px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .featured .card-visual {
+      height: auto; width: 380px; min-height: 180px; flex-shrink: 0;
+    }
+
+    .card-visual-bg { position: absolute; inset: 0; }
+    .card-visual-bg.v1 { background: #171717; }
+    .card-visual-bg.v2 { background: #404040; }
+    .card-visual-bg.v3 { background: #262626; }
+
+    .card-visual .code-preview {
+      position: relative; z-index: 1;
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: rgba(255,255,255,0.4);
+      padding: 1.25rem;
+      line-height: 1.8;
+      width: 100%;
+    }
+
+    .code-preview .kw { color: rgba(255,255,255,0.6); }
+    .code-preview .fn { color: rgba(255,255,255,0.55); }
+    .code-preview .str { color: rgba(255,255,255,0.5); }
+    .code-preview .cm { color: rgba(255,255,255,0.2); }
+
+    .card-category {
+      position: absolute;
+      top: 0.65rem; left: 0.65rem; z-index: 2;
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      font-weight: 400;
+      padding: 0.2rem 0.5rem;
+      background: rgba(255,255,255,0.9);
+      border-radius: 3px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--fg);
+    }
+
+    .card-body {
+      padding: 1.5rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-date {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      color: var(--fg-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .card-body h3 {
+      font-family: var(--font-heading);
+      font-size: 0.95rem;
+      font-weight: 500;
+      line-height: 1.5;
+      letter-spacing: -0.015em;
+      margin-bottom: 0.4rem;
+    }
+
+    .featured .card-body h3 { font-size: 1.2rem; font-weight: 600; }
+
+    .card-body p {
+      font-size: 0.78rem;
+      color: var(--fg-secondary);
+      line-height: 1.75;
+      margin-bottom: 0.85rem;
+      flex: 1;
+    }
+
+    .card-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+    .card-tag {
+      font-family: var(--font-mono);
+      font-size: 0.55rem;
+      color: var(--fg-muted);
+      letter-spacing: 0.02em;
+    }
+
+    .card-tag::before { content: '#'; }
+
+    /* ===== TAGS ===== */
+    .tags-bar {
+      margin-top: 3rem;
+      display: flex;
+      align-items: baseline;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .tags-bar-label {
+      font-family: var(--font-heading);
+      font-weight: 500;
+      font-size: 0.75rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--fg-secondary);
+      white-space: nowrap;
+    }
+
+    .tags-scroll { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+
+    .tags-scroll a {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--fg-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .tags-scroll a:hover { color: var(--fg); }
+
+    /* ===== FOOTER ===== */
+    footer { padding: 3rem 2rem 2rem; }
+
+    .footer-inner {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-brand {
+      font-size: 0.72rem;
+      color: var(--fg-muted);
+    }
+
+    .footer-links { display: flex; gap: 1.25rem; }
+
+    .footer-links a {
+      font-size: 0.68rem;
+      color: var(--fg-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--fg); }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero h1 { animation: fadeIn 0.5s ease-out both; }
+    .hero p { animation: fadeIn 0.5s ease-out 0.06s both; }
+    .hero-meta { animation: fadeIn 0.5s ease-out 0.12s both; }
+    .articles-grid { animation: fadeIn 0.4s ease-out 0.2s both; }
+    .tags-bar { animation: fadeIn 0.4s ease-out 0.3s both; }
+
+    @media (max-width: 960px) {
+      .articles-grid { grid-template-columns: 1fr 1fr; }
+      .article-card.featured { flex-direction: column; }
+      .featured .card-visual { width: 100%; min-height: 140px; }
+    }
+
+    @media (max-width: 640px) {
+      nav { display: none; }
+      .menu-toggle { display: block; }
+      .articles-grid { grid-template-columns: 1fr; }
+      .hero { padding: 4rem 1.25rem 2.5rem; }
+      .main-content { padding: 2rem 1.25rem 4rem; }
+      .header-inner { padding: 0 1.25rem; }
+      .footer-inner { flex-direction: column; gap: 1rem; }
+      .hero-meta { gap: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="#" class="logo">because I love tech</a>
+      <nav>
+        <a href="#" class="active">Home</a>
+        <a href="#">Articles</a>
+        <a href="#">Tags</a>
+        <a href="#">About</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>技術を学び、発信する場所。</h1>
+    <p>Web開発・クラウド・設計パターンについて、実務で得た知見を共有するテックブログです。</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item"><div class="number">24</div><div class="label">Articles</div></div>
+      <div class="hero-meta-item"><div class="number">11</div><div class="label">Tags</div></div>
+      <div class="hero-meta-item"><div class="number">6k</div><div class="label">Readers</div></div>
+    </div>
+  </section>
+
+  <div class="section-divider"><hr></div>
+
+  <div class="main-content">
+    <div class="section-header">
+      <h2>Latest Articles</h2>
+      <a href="#" class="view-all">View all</a>
+    </div>
+
+    <div class="articles-grid">
+      <a href="#" class="article-card featured">
+        <div class="card-visual">
+          <div class="card-visual-bg v1"></div>
+          <span class="card-category">Architecture</span>
+          <div class="code-preview">
+            <span class="cm">// app router structure</span><br>
+            <span class="kw">src/</span><br>
+            &nbsp;&nbsp;<span class="fn">features/</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="str">auth/</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="str">dashboard/</span><br>
+            &nbsp;&nbsp;<span class="fn">shared/</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="str">components/</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="card-date">2026.01.28</span>
+          <h3>Next.js App Router で考える大規模アプリケーションのディレクトリ設計</h3>
+          <p>App Router の登場により、Next.js のプロジェクト構造は大きく変わりました。Feature-Sliced Design を参考に、実務で採用した設計パターンとその判断基準を整理します。</p>
+          <div class="card-tags">
+            <span class="card-tag">Next.js</span>
+            <span class="card-tag">React</span>
+            <span class="card-tag">Architecture</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="article-card">
+        <div class="card-visual">
+          <div class="card-visual-bg v2"></div>
+          <span class="card-category">Edge</span>
+          <div class="code-preview">
+            <span class="kw">export default</span> {<br>
+            &nbsp;&nbsp;<span class="fn">async fetch</span>(req) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">const</span> db = <span class="fn">env</span>.<span class="str">DB</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> <span class="fn">json</span>(data);<br>
+            &nbsp;&nbsp;}<br>}
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="card-date">2026.01.15</span>
+          <h3>Cloudflare Workers + D1 で実現するエッジコンピューティングの実践</h3>
+          <p>Workers と D1 を組み合わせたAPI構築とパフォーマンス計測結果を共有します。</p>
+          <div class="card-tags">
+            <span class="card-tag">Cloudflare</span>
+            <span class="card-tag">Workers</span>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="article-card">
+        <div class="card-visual">
+          <div class="card-visual-bg v3"></div>
+          <span class="card-category">TypeScript</span>
+          <div class="code-preview">
+            <span class="kw">type</span> <span class="fn">Result</span>&lt;T&gt; =<br>
+            &nbsp;&nbsp;| { <span class="str">ok</span>: <span class="kw">true</span>; data: T }<br>
+            &nbsp;&nbsp;| { <span class="str">ok</span>: <span class="kw">false</span>; err: Error }
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="card-date">2026.01.03</span>
+          <h3>TypeScript の型パズルを超えて ― 実務で本当に役立つ型設計のパターン集</h3>
+          <p>チーム開発で「ちょうどいい型安全」を実現するための実践的なパターンをまとめました。</p>
+          <div class="card-tags">
+            <span class="card-tag">TypeScript</span>
+            <span class="card-tag">Patterns</span>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="tags-bar">
+      <span class="tags-bar-label">Tags</span>
+      <div class="tags-scroll">
+        <a href="#">Next.js</a><a href="#">React</a><a href="#">TypeScript</a><a href="#">AWS</a>
+        <a href="#">Cloudflare</a><a href="#">Docker</a><a href="#">Node.js</a><a href="#">GraphQL</a>
+        <a href="#">Rust</a><a href="#">CI/CD</a><a href="#">Terraform</a><a href="#">Vitest</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-brand">because I love tech &copy; 2026</span>
+      <div class="footer-links">
+        <a href="#">GitHub</a><a href="#">X</a><a href="#">RSS</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

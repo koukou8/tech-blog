@@ -1,0 +1,116 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog');
+  return posts.map((post) => ({
+    params: { slug: post.id },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content, headings } = await render(post);
+
+const allPosts = (await getCollection('blog')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+const currentIndex = allPosts.findIndex((p) => p.id === post.id);
+const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
+const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
+
+const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
+
+const formattedDate = post.data.date.toLocaleDateString('ja-JP', {
+  year: 'numeric', month: '2-digit', day: '2-digit',
+}).replace(/\//g, '.');
+
+const tagColorMap: Record<string, { bg: string; text: string }> = {
+  'Next.js': { bg: 'bg-sky-light', text: 'text-[#0284c7]' },
+  'React': { bg: 'bg-purple-light', text: 'text-[#7c3aed]' },
+  'TypeScript': { bg: 'bg-sky-light', text: 'text-[#0284c7]' },
+  'Cloudflare': { bg: 'bg-accent-light', text: 'text-accent-dark' },
+  'Workers': { bg: 'bg-pink-light', text: 'text-[#db2777]' },
+  'Architecture': { bg: 'bg-lime-light', text: 'text-[#4d7c0f]' },
+  'Patterns': { bg: 'bg-purple-light', text: 'text-[#7c3aed]' },
+};
+const defaultTagColor = { bg: 'bg-accent-light', text: 'text-accent-dark' };
+---
+
+<BaseLayout title={`${post.data.title} — because I love tech`} description={post.data.description}>
+  <div class="relative z-1 mx-auto max-w-[1200px] px-8 pt-12 pb-20 max-sm:px-5 max-sm:pt-8">
+    <div class="grid grid-cols-[1fr_240px] gap-12 max-[960px]:grid-cols-1">
+      <!-- Main content -->
+      <article class="animate-slide-up min-w-0">
+        <header class="mb-10">
+          <div class="mb-3 flex flex-wrap items-center gap-2">
+            <span class="font-mono text-[0.7rem] text-fg-muted">{formattedDate}</span>
+            {post.data.category && (
+              <span class="rounded-lg border-2 border-fg bg-bg-card px-2.5 py-0.5 font-mono text-[0.58rem] font-bold uppercase tracking-wider">
+                {post.data.category}
+              </span>
+            )}
+          </div>
+          <h1 class="mb-4 font-heading text-[clamp(1.5rem,3.5vw,2.4rem)] font-extrabold leading-[1.2] tracking-tight">
+            {post.data.title}
+          </h1>
+          <p class="mb-4 text-[0.95rem] leading-[1.8] text-fg-secondary">{post.data.description}</p>
+          <div class="flex flex-wrap gap-1.5">
+            {post.data.tags.map((tag: string) => {
+              const colors = tagColorMap[tag] || defaultTagColor;
+              return (
+                <a href={`/tags/${tag}`} class={`rounded-lg px-2.5 py-1 font-mono text-[0.62rem] no-underline ${colors.bg} ${colors.text}`}>
+                  {tag}
+                </a>
+              );
+            })}
+          </div>
+        </header>
+
+        <div class="prose max-w-none">
+          <Content />
+        </div>
+
+        <!-- Prev/Next -->
+        <nav class="mt-16 grid grid-cols-2 gap-4 max-sm:grid-cols-1">
+          {prevPost && (
+            <a href={`/articles/${prevPost.id}`} class="card-hover flex flex-col rounded-2xl border-2 border-fg bg-bg-card p-5 no-underline shadow-[3px_3px_0_var(--color-fg)]">
+              <span class="mb-1 text-[0.68rem] font-semibold text-fg-muted">&larr; Prev</span>
+              <span class="font-heading text-[0.9rem] font-bold text-fg">{prevPost.data.title}</span>
+            </a>
+          )}
+          {nextPost && (
+            <a href={`/articles/${nextPost.id}`} class="card-hover flex flex-col rounded-2xl border-2 border-fg bg-bg-card p-5 no-underline shadow-[3px_3px_0_var(--color-fg)] max-sm:col-start-1" style={!prevPost ? "grid-column-start: 2;" : ""}>
+              <span class="mb-1 text-[0.68rem] font-semibold text-fg-muted">Next &rarr;</span>
+              <span class="font-heading text-[0.9rem] font-bold text-fg">{nextPost.data.title}</span>
+            </a>
+          )}
+        </nav>
+      </article>
+
+      <!-- Sidebar TOC -->
+      {tocHeadings.length > 0 && (
+        <aside class="max-[960px]:hidden">
+          <div class="sticky top-[80px]">
+            <div class="rounded-2xl border-2 border-fg bg-bg-card p-5 shadow-[3px_3px_0_var(--color-fg)]">
+              <h2 class="mb-3 font-heading text-[0.85rem] font-extrabold">目次</h2>
+              <ul class="space-y-1.5">
+                {tocHeadings.map((h) => (
+                  <li style={h.depth === 3 ? 'padding-left: 1rem;' : ''}>
+                    <a
+                      href={`#${h.slug}`}
+                      class="block text-[0.75rem] leading-[1.6] text-fg-secondary no-underline transition-colors hover:text-accent"
+                    >
+                      {h.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </aside>
+      )}
+    </div>
+  </div>
+</BaseLayout>

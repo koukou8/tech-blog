@@ -1,0 +1,61 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import HeroSection from '../components/HeroSection.astro';
+import FeaturedCard from '../components/FeaturedCard.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import TagBar from '../components/TagBar.astro';
+import FilterPills from '../components/FilterPills.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = (await getCollection('blog')).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+
+const featuredPost = allPosts.find((p) => p.data.featured);
+const regularPosts = allPosts.filter((p) => !p.data.featured);
+
+const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
+
+const gradients: Array<'v1' | 'v2' | 'v3'> = ['v2', 'v3', 'v1'];
+---
+
+<BaseLayout title="because I love tech">
+  <HeroSection articleCount={allPosts.length} tagCount={allTags.length} />
+
+  <div class="relative z-1 mx-auto max-w-[1200px] px-8 pb-20 max-sm:px-5 max-sm:pb-16">
+    <div class="mb-7 flex items-center justify-between">
+      <h2 class="flex items-center gap-2 font-heading text-[1.35rem] font-extrabold tracking-tight">
+        <span class="inline-block h-2.5 w-2.5 rounded-full bg-accent"></span>
+        Latest Articles
+      </h2>
+      <FilterPills categories={['All', 'Frontend', 'Infra', 'Design']} />
+    </div>
+
+    <div class="grid grid-cols-3 gap-[1.15rem] max-[960px]:grid-cols-2 max-sm:grid-cols-1">
+      {featuredPost && (
+        <FeaturedCard
+          title={featuredPost.data.title}
+          description={featuredPost.data.description}
+          date={featuredPost.data.date}
+          tags={featuredPost.data.tags}
+          slug={featuredPost.id}
+          category={featuredPost.data.category}
+        />
+      )}
+
+      {regularPosts.map((post, i) => (
+        <ArticleCard
+          title={post.data.title}
+          description={post.data.description}
+          date={post.data.date}
+          tags={post.data.tags}
+          slug={post.id}
+          gradient={gradients[i % 3]}
+          category={post.data.category}
+        />
+      ))}
+    </div>
+
+    <TagBar tags={allTags} />
+  </div>
+</BaseLayout>

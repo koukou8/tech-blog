@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>because I love tech — Clean</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #ffffff;
+      --bg-card: #ffffff;
+      --fg: #18181b;
+      --fg-secondary: #71717a;
+      --fg-muted: #a1a1aa;
+      --border: #e4e4e7;
+      --accent: #18181b;
+      --accent-light: #f4f4f5;
+      --accent-dark: #09090b;
+      --blue: #3b82f6;
+      --teal: #14b8a6;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+      --font-heading: 'Sora', sans-serif;
+      --font-body: 'Sora', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+      --radius: 10px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      color: var(--fg);
+      font-weight: 300;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    ::selection { background: var(--fg); color: var(--bg); }
+
+    /* ===== HEADER ===== */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-family: var(--font-heading);
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--fg);
+      text-decoration: none;
+      letter-spacing: -0.03em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .logo-icon {
+      width: 26px;
+      height: 26px;
+      background: var(--fg);
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--bg);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      font-weight: 700;
+    }
+
+    nav { display: flex; gap: 0.25rem; align-items: center; }
+
+    nav a {
+      font-size: 0.78rem;
+      font-weight: 400;
+      color: var(--fg-secondary);
+      text-decoration: none;
+      padding: 0.4rem 0.8rem;
+      border-radius: 6px;
+      transition: all 0.15s;
+    }
+
+    nav a:hover { color: var(--fg); background: var(--accent-light); }
+    nav a.active { color: var(--fg); font-weight: 500; background: var(--accent-light); }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      width: 36px;
+      height: 32px;
+      position: relative;
+    }
+
+    .menu-toggle span {
+      display: block; width: 16px; height: 1.5px; background: var(--fg);
+      position: absolute; left: 50%; transform: translateX(-50%); transition: 0.3s;
+    }
+    .menu-toggle span:nth-child(1) { top: 8px; }
+    .menu-toggle span:nth-child(2) { top: 50%; transform: translate(-50%, -50%); }
+    .menu-toggle span:nth-child(3) { bottom: 8px; }
+
+    /* ===== HERO ===== */
+    .hero {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 5rem 2rem 3.5rem;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .hero-left h1 {
+      font-family: var(--font-heading);
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.04em;
+      margin-bottom: 1rem;
+    }
+
+    .hero-left h1 .highlight {
+      position: relative;
+      display: inline;
+    }
+
+    .hero-left h1 .highlight::after {
+      content: '';
+      position: absolute;
+      bottom: 2px;
+      left: 0;
+      width: 100%;
+      height: 8px;
+      background: var(--blue);
+      opacity: 0.18;
+      border-radius: 2px;
+      z-index: -1;
+    }
+
+    .hero-left p {
+      font-size: 0.92rem;
+      color: var(--fg-secondary);
+      max-width: 380px;
+      line-height: 1.8;
+    }
+
+    .hero-right {
+      display: flex;
+      gap: 0.6rem;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+      min-width: 120px;
+      transition: all 0.15s;
+    }
+
+    .hero-stat:hover {
+      border-color: var(--fg-muted);
+      box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+    }
+
+    .hero-stat .number {
+      font-family: var(--font-mono);
+      font-size: 1.6rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.25rem;
+      color: var(--fg);
+    }
+
+    .hero-stat .label {
+      font-size: 0.68rem;
+      font-weight: 400;
+      color: var(--fg-muted);
+      letter-spacing: 0.03em;
+    }
+
+    /* ===== MAIN ===== */
+    .main-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2rem 5rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1.75rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section-header h2 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .filter-pills { display: flex; gap: 0.3rem; }
+
+    .filter-pills button {
+      font-family: var(--font-body);
+      font-size: 0.72rem;
+      font-weight: 400;
+      padding: 0.3rem 0.75rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      background: transparent;
+      color: var(--fg-secondary);
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-pills button:hover { border-color: var(--fg-muted); color: var(--fg); }
+    .filter-pills button.active { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+
+    /* ===== CARDS ===== */
+    .articles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .article-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      flex-direction: column;
+      transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .article-card:hover {
+      border-color: var(--fg-muted);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.06);
+      transform: translateY(-2px);
+    }
+
+    .article-card.featured {
+      grid-column: 1 / -1;
+      flex-direction: row;
+    }
+
+    .card-visual {
+      height: 150px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .featured .card-visual {
+      height: auto;
+      width: 360px;
+      min-height: 200px;
+      flex-shrink: 0;
+    }
+
+    .card-visual-bg { position: absolute; inset: 0; }
+    .card-visual-bg.v1 { background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); }
+    .card-visual-bg.v2 { background: linear-gradient(135deg, #3b82f6 0%, #14b8a6 100%); }
+    .card-visual-bg.v3 { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
+
+    .card-visual .code-preview {
+      position: relative; z-index: 1;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: rgba(255,255,255,0.5);
+      padding: 1.25rem;
+      line-height: 1.8;
+      width: 100%;
+    }
+
+    .code-preview .kw { color: #93c5fd; }
+    .code-preview .fn { color: #fde68a; }
+    .code-preview .str { color: #6ee7b7; }
+    .code-preview .cm { color: rgba(255,255,255,0.25); }
+
+    .card-category {
+      position: absolute;
+      top: 0.65rem; left: 0.65rem; z-index: 2;
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      font-weight: 500;
+      padding: 0.2rem 0.55rem;
+      background: rgba(255,255,255,0.95);
+      border-radius: 4px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--fg);
+    }
+
+    .card-body {
+      padding: 1.35rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card-date {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      color: var(--fg-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .card-body h3 {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.45;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+
+    .featured .card-body h3 { font-size: 1.25rem; }
+
+    .card-body p {
+      font-size: 0.8rem;
+      color: var(--fg-secondary);
+      line-height: 1.7;
+      margin-bottom: 0.85rem;
+      flex: 1;
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+
+    .card-tags { display: flex; gap: 0.25rem; flex-wrap: wrap; }
+
+    .card-tag {
+      font-family: var(--font-mono);
+      font-size: 0.56rem;
+      font-weight: 400;
+      padding: 0.18rem 0.45rem;
+      border-radius: 4px;
+      letter-spacing: 0.02em;
+    }
+
+    .card-tag.blue { background: #eff6ff; color: #2563eb; }
+    .card-tag.teal { background: #f0fdfa; color: #0d9488; }
+    .card-tag.rose { background: #fff1f2; color: #e11d48; }
+    .card-tag.indigo { background: #eef2ff; color: #4f46e5; }
+    .card-tag.slate { background: #f8fafc; color: #475569; }
+
+    .card-arrow {
+      width: 30px; height: 30px; border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s; flex-shrink: 0;
+    }
+
+    .article-card:hover .card-arrow { background: var(--fg); border-color: var(--fg); }
+
+    .card-arrow svg { width: 13px; height: 13px; stroke: var(--fg-muted); transition: stroke 0.2s; }
+    .article-card:hover .card-arrow svg { stroke: var(--bg); }
+
+    /* ===== TAGS BAR ===== */
+    .tags-bar {
+      margin-top: 2.5rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .tags-bar-label {
+      font-family: var(--font-heading);
+      font-weight: 600;
+      font-size: 0.8rem;
+      white-space: nowrap;
+    }
+
+    .tags-scroll { display: flex; gap: 0.35rem; flex-wrap: wrap; }
+
+    .tags-scroll a {
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      padding: 0.3rem 0.65rem;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--fg-secondary);
+      text-decoration: none;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+
+    .tags-scroll a:hover {
+      border-color: var(--fg);
+      color: var(--fg);
+      background: var(--accent-light);
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-brand {
+      font-family: var(--font-heading);
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: var(--fg-secondary);
+    }
+
+    .footer-links { display: flex; gap: 1rem; }
+
+    .footer-links a {
+      font-size: 0.72rem;
+      font-weight: 400;
+      color: var(--fg-muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+
+    .footer-links a:hover { color: var(--fg); }
+
+    /* ===== ANIMATIONS ===== */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero-left { animation: fadeIn 0.5s ease-out both; }
+    .hero-right { animation: fadeIn 0.5s ease-out 0.08s both; }
+    .article-card:nth-child(1) { animation: fadeIn 0.4s ease-out 0.15s both; }
+    .article-card:nth-child(2) { animation: fadeIn 0.4s ease-out 0.22s both; }
+    .article-card:nth-child(3) { animation: fadeIn 0.4s ease-out 0.29s both; }
+    .tags-bar { animation: fadeIn 0.4s ease-out 0.35s both; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 960px) {
+      .articles-grid { grid-template-columns: 1fr 1fr; }
+      .article-card.featured { flex-direction: column; }
+      .featured .card-visual { width: 100%; min-height: 160px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-right { justify-content: flex-start; }
+    }
+
+    @media (max-width: 640px) {
+      nav { display: none; }
+      .menu-toggle { display: block; }
+      .articles-grid { grid-template-columns: 1fr; }
+      .hero { padding: 3rem 1.25rem 2rem; }
+      .main-content { padding: 0 1.25rem 4rem; }
+      .header-inner { padding: 0 1.25rem; }
+      .tags-bar { padding: 1rem 1.25rem; }
+      .footer-inner { flex-direction: column; gap: 1rem; }
+      .filter-pills { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <div class="logo-icon">B</div>
+        because I love tech
+      </a>
+      <nav>
+        <a href="#" class="active">Home</a>
+        <a href="#">Articles</a>
+        <a href="#">Tags</a>
+        <a href="#">About</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Menu"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-grid">
+      <div class="hero-left">
+        <h1>技術を学び、<br><span class="highlight">発信する</span>場所。</h1>
+        <p>Web開発・クラウド・設計パターンについて、実務で得た知見を共有するテックブログです。</p>
+      </div>
+      <div class="hero-right">
+        <div class="hero-stat"><div class="number">24</div><div class="label">Articles</div></div>
+        <div class="hero-stat"><div class="number">11</div><div class="label">Tags</div></div>
+        <div class="hero-stat"><div class="number">6k</div><div class="label">Readers</div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="main-content">
+    <div class="section-header">
+      <h2>Latest Articles</h2>
+      <div class="filter-pills">
+        <button class="active">All</button>
+        <button>Frontend</button>
+        <button>Infra</button>
+        <button>Design</button>
+      </div>
+    </div>
+
+    <div class="articles-grid">
+      <a href="#" class="article-card featured">
+        <div class="card-visual">
+          <div class="card-visual-bg v1"></div>
+          <span class="card-category">Architecture</span>
+          <div class="code-preview">
+            <span class="cm">// app router structure</span><br>
+            <span class="kw">src/</span><br>
+            &nbsp;&nbsp;<span class="fn">features/</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="str">auth/</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="str">dashboard/</span><br>
+            &nbsp;&nbsp;<span class="fn">shared/</span><br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="str">components/</span>
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="card-date">2026.01.28</span>
+          <h3>Next.js App Router で考える大規模アプリケーションのディレクトリ設計</h3>
+          <p>App Router の登場により、Next.js のプロジェクト構造は大きく変わりました。Feature-Sliced Design を参考に、実務で採用した設計パターンとその判断基準を整理します。</p>
+          <div class="card-footer">
+            <div class="card-tags">
+              <span class="card-tag blue">Next.js</span>
+              <span class="card-tag indigo">React</span>
+              <span class="card-tag teal">Architecture</span>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="article-card">
+        <div class="card-visual">
+          <div class="card-visual-bg v2"></div>
+          <span class="card-category">Edge</span>
+          <div class="code-preview">
+            <span class="kw">export default</span> {<br>
+            &nbsp;&nbsp;<span class="fn">async fetch</span>(req) {<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">const</span> db = <span class="fn">env</span>.<span class="str">DB</span>;<br>
+            &nbsp;&nbsp;&nbsp;&nbsp;<span class="kw">return</span> <span class="fn">json</span>(data);<br>
+            &nbsp;&nbsp;}<br>}
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="card-date">2026.01.15</span>
+          <h3>Cloudflare Workers + D1 で実現するエッジコンピューティングの実践</h3>
+          <p>Workers と D1 を組み合わせたAPI構築とパフォーマンス計測結果を共有します。</p>
+          <div class="card-footer">
+            <div class="card-tags">
+              <span class="card-tag rose">Cloudflare</span>
+              <span class="card-tag slate">Workers</span>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="article-card">
+        <div class="card-visual">
+          <div class="card-visual-bg v3"></div>
+          <span class="card-category">TypeScript</span>
+          <div class="code-preview">
+            <span class="kw">type</span> <span class="fn">Result</span>&lt;T&gt; =<br>
+            &nbsp;&nbsp;| { <span class="str">ok</span>: <span class="kw">true</span>; data: T }<br>
+            &nbsp;&nbsp;| { <span class="str">ok</span>: <span class="kw">false</span>; err: Error }
+          </div>
+        </div>
+        <div class="card-body">
+          <span class="card-date">2026.01.03</span>
+          <h3>TypeScript の型パズルを超えて ― 実務で本当に役立つ型設計のパターン集</h3>
+          <p>チーム開発で「ちょうどいい型安全」を実現するための実践的なパターンをまとめました。</p>
+          <div class="card-footer">
+            <div class="card-tags">
+              <span class="card-tag blue">TypeScript</span>
+              <span class="card-tag indigo">Patterns</span>
+            </div>
+            <div class="card-arrow"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></div>
+          </div>
+        </div>
+      </a>
+    </div>
+
+    <div class="tags-bar">
+      <span class="tags-bar-label">Tags</span>
+      <div class="tags-scroll">
+        <a href="#">Next.js</a><a href="#">React</a><a href="#">TypeScript</a><a href="#">AWS</a>
+        <a href="#">Cloudflare</a><a href="#">Docker</a><a href="#">Node.js</a><a href="#">GraphQL</a>
+        <a href="#">Rust</a><a href="#">CI/CD</a><a href="#">Terraform</a><a href="#">Vitest</a>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <span class="footer-brand">because I love tech &copy; 2026</span>
+      <div class="footer-links">
+        <a href="#">GitHub</a><a href="#">X (Twitter)</a><a href="#">RSS</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
