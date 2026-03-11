@@ -5,6 +5,7 @@ tags: ["Python", "GitHub Actions", "LINE API", "YouTube API", "Automation"]
 description: "特定のYouTubeチャンネルの新着動画を自動検知してLINEに通知するシステムを、外部ライブラリなし・完全無料で構築した記録です。"
 featured: false
 category: "Automation"
+draft: true
 ---
 
 ## はじめに

@@ -6,9 +6,11 @@ interface Props {
   tags: string[];
   slug: string;
   category?: string;
+  image?: string;
+  draft?: boolean;
 }
 
-const { title, description, date, tags, slug, category } = Astro.props;
+const { title, description, date, tags, slug, category, image, draft } = Astro.props;
 
 const tagColorMap: Record<string, { bg: string; text: string }> = {
   'Next.js': { bg: 'bg-sky-light', text: 'text-[#0284c7]' },
@@ -27,9 +29,17 @@ const formattedDate = date.toLocaleDateString('ja-JP', { year: 'numeric', month:
 
 <a href={`/articles/${slug}`} class="card-hover col-span-full flex flex-row overflow-hidden rounded-2xl border-2 border-fg bg-bg-card no-underline shadow-[3px_3px_0_var(--color-fg)] max-[960px]:flex-col">
   <div class="relative flex w-[370px] min-h-[210px] shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-[#1e3a5f] to-[#0c0c0c] max-[960px]:w-full max-[960px]:min-h-[170px]">
+    {image && (
+      <img src={image} alt={title} class="absolute inset-0 h-full w-full object-cover" />
+    )}
     {category && (
       <span class="absolute top-3 left-3 z-2 rounded-lg border-2 border-fg bg-bg-card px-2.5 py-1 font-mono text-[0.58rem] font-bold uppercase tracking-wider text-fg">
         {category}
+      </span>
+    )}
+    {draft && (
+      <span class="absolute top-3 right-3 z-2 rounded-lg border-2 border-yellow-400 bg-yellow-100 px-2.5 py-1 font-mono text-[0.58rem] font-bold uppercase tracking-wider text-yellow-700">
+        Draft
       </span>
     )}
     <div class="relative z-1 w-full px-5 py-5 font-mono text-[0.62rem] leading-[1.8] text-white/55">

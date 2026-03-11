@@ -4,18 +4,20 @@ import { getCollection, render } from 'astro:content';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
-  return posts.map((post) => ({
-    params: { slug: post.id },
-    props: { post },
-  }));
+  return posts
+    .filter((post) => !post.data.draft)
+    .map((post) => ({
+      params: { slug: post.id },
+      props: { post },
+    }));
 }
 
 const { post } = Astro.props;
 const { Content, headings } = await render(post);
 
-const allPosts = (await getCollection('blog')).sort(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime()
-);
+const allPosts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const currentIndex = allPosts.findIndex((p) => p.id === post.id);
 const prevPost = currentIndex < allPosts.length - 1 ? allPosts[currentIndex + 1] : null;
 const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
@@ -38,17 +40,27 @@ const tagColorMap: Record<string, { bg: string; text: string }> = {
 const defaultTagColor = { bg: 'bg-accent-light', text: 'text-accent-dark' };
 ---
 
-<BaseLayout title={`${post.data.title} — because I love tech`} description={post.data.description}>
+<BaseLayout title={`${post.data.title} — DEV VLOG`} description={post.data.description}>
   <div class="relative z-1 mx-auto max-w-[1200px] px-8 pt-12 pb-20 max-sm:px-5 max-sm:pt-8">
     <div class="grid grid-cols-[1fr_240px] gap-12 max-[960px]:grid-cols-1">
       <!-- Main content -->
       <article class="animate-slide-up min-w-0">
+        {post.data.image && (
+          <div class="mb-8 overflow-hidden rounded-2xl border-2 border-fg shadow-[3px_3px_0_var(--color-fg)]">
+            <img src={post.data.image} alt={post.data.title} class="h-[300px] w-full object-cover max-sm:h-[200px]" />
+          </div>
+        )}
         <header class="mb-10">
           <div class="mb-3 flex flex-wrap items-center gap-2">
             <span class="font-mono text-[0.7rem] text-fg-muted">{formattedDate}</span>
             {post.data.category && (
               <span class="rounded-lg border-2 border-fg bg-bg-card px-2.5 py-0.5 font-mono text-[0.58rem] font-bold uppercase tracking-wider">
                 {post.data.category}
+              </span>
+            )}
+            {post.data.draft && (
+              <span class="rounded-lg border-2 border-yellow-400 bg-yellow-100 px-2.5 py-0.5 font-mono text-[0.58rem] font-bold uppercase tracking-wider text-yellow-700">
+                Draft
               </span>
             )}
           </div>

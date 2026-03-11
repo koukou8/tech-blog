@@ -5,6 +5,7 @@ tags: ["Voice Input", "Tools", "Productivity"]
 description: "ターミナル作業中に使える音声入力ツール3種を、精度・スピード・コストなど多角的に比較しました。"
 featured: false
 category: "Tools"
+draft: true
 ---
 
 ## はじめに

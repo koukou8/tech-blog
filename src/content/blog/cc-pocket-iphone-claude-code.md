@@ -1,10 +1,12 @@
 ---
 title: "CC PocketでiPhoneからClaudeCodeを操作する"
+image: "/images/cc-pocket-icon.png"
 date: 2026-03-11
 tags: ["Claude Code", "CC Pocket", "iOS", "TailScale", "開発ツール"]
-description: "CC PocketはiPhoneからClaudeCodeのセッションを操作できるアプリ。TailScaleと組み合わせることで、外出先でもMacのClaudeCodeを継続利用できる。"
+description: "CC PocketはiPhoneからClaudeCodeのセッションを操作できるアプリです。TailScaleと組み合わせることで、外出先でもMacのClaudeCodeを利用できます。"
 featured: false
 category: "Tools"
+draft: false
 ---
 
 ## はじめに
@@ -19,11 +21,11 @@ CC PocketはiPhoneからClaudeCodeのセッションに接続できるアプリ�
 
 ### 移動中に開発を継続できる
 
-電車やバスでの移動中に、MacBookを開かずにスマホだけで開発を進められます。タスクを投げておいて結果を確認する、次の指示を出すといった使い方が自然にはまります。
+電車やバスでの移動中に、MacBookを開かずにスマホだけで開発を進められます。タスクを投げておいて結果を確認する、次の指示を出すといった使い方が可能です。
 
 ### プロジェクト横断でセッションを管理できる
 
-複数プロジェクトのClaudeCodeセッションを一覧で確認できます。MacBookのターミナルだと複数タブを行き来する必要がありますが、CC Pocketではまとめて把握できます。
+複数プロジェクトのClaudeCodeセッションを一覧で確認できます。
 
 ### 隙間時間を有効活用できる
 
@@ -31,7 +33,7 @@ CC PocketはiPhoneからClaudeCodeのセッションに接続できるアプリ�
 
 ### スキル（Skillsコマンド）も呼び出せる
 
-`/commit` や `/review-pr` などのSkillsコマンドもiPhoneから実行できます。ターミナルでの操作と同等の体験がスマホから得られます。
+SkillsコマンドもiPhoneから実行できます。ターミナルでの操作と同等の体験がスマホから得られます。
 
 ### 新規セッションを作成できる
 
@@ -52,6 +54,8 @@ TailScaleはデバイス間にVPNトンネルを張るツールです。異な�
 **iPhone側**
 
 App StoreからTailScaleをインストールし、同じアカウントでサインインします。
+
+ [CC Pocket - App Store](https://apps.apple.com/us/app/cc-pocket-dev-agent-remote/id6759188790)
 
 サインイン後、TailScaleの管理画面（または通知センターのTailScaleアイコン）でMacBookのIPアドレス（`100.x.x.x` 形式）を確認しておきます。
 
@@ -80,7 +84,7 @@ CC PocketでQRコードをスキャンするだけで接続できます。
 CC Pocketで `Add > Host` を選択し、ブリッジサーバー起動時に出力されたTailscaleのURLを入力します。
 
 ```
-ws://100.71.215.98:8765
+ws://XXX.XX.XXX.XX:XXXX
 ```
 
 URLはコマンド実行時のターミナル出力に表示されています。
@@ -89,11 +93,13 @@ URLはコマンド実行時のターミナル出力に表示されています�
 
 CC PocketにClaudeCodeのセッション一覧が表示されれば準備完了です。
 
+![スクリーンショット](/images/cc-pocket-screen.png)
+
 ## 実際の使い方
 
 ### スマホからタスクを投げる
 
-セッションを選択してメッセージを送るだけで、MacBook上のClaudeCodeが動き始めます。処理が走っている間はスマホを閉まって移動し、落ち着いたタイミングで結果を確認するという流れが自然です。
+セッションを選択してメッセージを送るだけで、MacBook上のClaudeCodeが動き始めます。処理が走っている間はスマホを閉まって移動し、落ち着いたタイミングで結果を確認する使い方も可能です。
 
 ### MacBook側にも反映される
 
@@ -111,7 +117,7 @@ CC Pocketから送った操作はMacBook上のClaudeCodeにもリアルタイム
 
 ## 注意点
 
-- ブリッジサーバーはMacBookで起動したままにしておく必要があります（スリープするとセッションが切れます）。
+- ブリッジサーバーはMacBookで起動したままにしておく必要があります。
 - 外出先での接続にはTailScaleのインストールと同一アカウントへのサインインが前提です。
 - モバイル回線での通信量に注意してください。長時間の操作はWiFi環境での利用を推奨します。
 
@@ -119,4 +125,4 @@ CC Pocketから送った操作はMacBook上のClaudeCodeにもリアルタイム
 
 CC Pocketを使うことで、ClaudeCodeを使った開発がMacBookの前だけに限定されなくなります。移動中・隙間時間を活用してタスクを進めたい方にとって、導入コストが低く実用的なツールだと感じています。
 
-TailScaleのセットアップが最初の関門ですが、一度設定してしまえばあとはQRコードスキャンやURL入力で簡単に繋がります。ClaudeCodeをよく使っている方はぜひ試してみてください。
+TailScaleを一度設定してしまえばあとはQRコードスキャンやURL入力で簡単に繋がります。ClaudeCodeをよく使っている方はぜひ試してみてください。
