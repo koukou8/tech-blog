@@ -96,7 +96,11 @@ body::before {
   scroll-margin-top: 80px;
 }
 .prose h1 { font-size: 2rem; }
-.prose h2 { font-size: 1.5rem; }
+.prose h2 {
+  font-size: 1.5rem;
+  border-bottom: 2px solid var(--color-accent);
+  padding-bottom: 0.3em;
+}
 .prose h3 { font-size: 1.25rem; }
 .prose p { margin-bottom: 1.25em; }
 .prose a {
