@@ -1,25 +1,28 @@
 @import "tailwindcss";
 
 @theme {
-  --color-bg: #fef9f3;
-  --color-bg-card: #ffffff;
-  --color-fg: #2d2520;
-  --color-fg-secondary: #7a6f66;
-  --color-fg-muted: #b5aa9f;
-  --color-border: #ece5db;
-  --color-accent: #f07c42;
-  --color-accent-light: #fef0e6;
-  --color-accent-dark: #d4612d;
-  --color-sky: #38bdf8;
-  --color-sky-light: #e0f2fe;
-  --color-lime: #84cc16;
-  --color-lime-light: #ecfccb;
-  --color-pink: #f472b6;
-  --color-pink-light: #fce7f3;
-  --color-purple: #a78bfa;
-  --color-purple-light: #ede9fe;
-  --font-heading: 'Nunito', sans-serif;
-  --font-body: 'Nunito', sans-serif;
+  /* Burger King-inspired warm palette: espresso brown + cream + flame red */
+  --color-bg: #fbf2e6;
+  --color-bg-card: #fffdf8;
+  --color-fg: #45200f;
+  --color-fg-secondary: #8a6a5b;
+  --color-fg-muted: #b79f8e;
+  --color-border: #e9d8c3;
+  --color-accent: #d62300;
+  --color-accent-light: #fce6df;
+  --color-accent-dark: #aa1c00;
+  /* secondary accents kept warm so nothing clashes with the BK look */
+  --color-sky: #e08a00;
+  --color-sky-light: #fbeccb;
+  --color-lime: #6f9c1b;
+  --color-lime-light: #eef6d6;
+  --color-pink: #e8512a;
+  --color-pink-light: #fce4dc;
+  --color-purple: #a06a3c;
+  --color-purple-light: #f1e6d8;
+  --font-heading: 'M PLUS Rounded 1c', sans-serif;
+  --font-body: 'M PLUS Rounded 1c', sans-serif;
+  --font-display: 'Anton', 'M PLUS Rounded 1c', sans-serif;
   --font-mono: 'Space Mono', monospace;
 }
 

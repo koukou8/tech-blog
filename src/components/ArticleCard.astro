@@ -14,21 +14,21 @@ interface Props {
 const { title, description, date, tags, slug, gradient = 'v1', category, image, draft } = Astro.props;
 
 const gradientMap = {
-  v1: 'from-[#1e3a5f] to-[#0c0c0c]',
-  v2: 'from-accent to-pink',
-  v3: 'from-sky to-purple',
+  v1: 'from-[#502314] to-[#2a1207]',
+  v2: 'from-accent to-sky',
+  v3: 'from-sky to-accent',
 };
 
 const tagColorMap: Record<string, { bg: string; text: string }> = {
-  'Next.js': { bg: 'bg-sky-light', text: 'text-[#0284c7]' },
-  'React': { bg: 'bg-purple-light', text: 'text-[#7c3aed]' },
-  'TypeScript': { bg: 'bg-sky-light', text: 'text-[#0284c7]' },
+  'Next.js': { bg: 'bg-sky-light', text: 'text-[#a06400]' },
+  'React': { bg: 'bg-purple-light', text: 'text-[#7a4a1c]' },
+  'TypeScript': { bg: 'bg-sky-light', text: 'text-[#a06400]' },
   'Cloudflare': { bg: 'bg-accent-light', text: 'text-accent-dark' },
-  'Workers': { bg: 'bg-pink-light', text: 'text-[#db2777]' },
-  'Architecture': { bg: 'bg-lime-light', text: 'text-[#4d7c0f]' },
-  'Patterns': { bg: 'bg-purple-light', text: 'text-[#7c3aed]' },
+  'Workers': { bg: 'bg-pink-light', text: 'text-[#b8350f]' },
+  'Architecture': { bg: 'bg-lime-light', text: 'text-[#4d6b12]' },
+  'Patterns': { bg: 'bg-purple-light', text: 'text-[#7a4a1c]' },
   'D1': { bg: 'bg-accent-light', text: 'text-accent-dark' },
-  'Edge': { bg: 'bg-pink-light', text: 'text-[#db2777]' },
+  'Edge': { bg: 'bg-pink-light', text: 'text-[#b8350f]' },
 };
 
 const defaultTagColor = { bg: 'bg-accent-light', text: 'text-accent-dark' };

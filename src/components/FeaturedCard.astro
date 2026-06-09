@@ -13,13 +13,13 @@ interface Props {
 const { title, description, date, tags, slug, category, image, draft } = Astro.props;
 
 const tagColorMap: Record<string, { bg: string; text: string }> = {
-  'Next.js': { bg: 'bg-sky-light', text: 'text-[#0284c7]' },
-  'React': { bg: 'bg-purple-light', text: 'text-[#7c3aed]' },
-  'TypeScript': { bg: 'bg-sky-light', text: 'text-[#0284c7]' },
+  'Next.js': { bg: 'bg-sky-light', text: 'text-[#a06400]' },
+  'React': { bg: 'bg-purple-light', text: 'text-[#7a4a1c]' },
+  'TypeScript': { bg: 'bg-sky-light', text: 'text-[#a06400]' },
   'Cloudflare': { bg: 'bg-accent-light', text: 'text-accent-dark' },
-  'Workers': { bg: 'bg-pink-light', text: 'text-[#db2777]' },
-  'Architecture': { bg: 'bg-lime-light', text: 'text-[#4d7c0f]' },
-  'Patterns': { bg: 'bg-purple-light', text: 'text-[#7c3aed]' },
+  'Workers': { bg: 'bg-pink-light', text: 'text-[#b8350f]' },
+  'Architecture': { bg: 'bg-lime-light', text: 'text-[#4d6b12]' },
+  'Patterns': { bg: 'bg-purple-light', text: 'text-[#7a4a1c]' },
 };
 
 const defaultTagColor = { bg: 'bg-accent-light', text: 'text-accent-dark' };
@@ -28,7 +28,7 @@ const formattedDate = date.toLocaleDateString('ja-JP', { year: 'numeric', month:
 ---
 
 <a href={`/articles/${slug}`} class="card-hover col-span-full flex flex-row overflow-hidden rounded-2xl border-2 border-fg bg-bg-card no-underline shadow-[3px_3px_0_var(--color-fg)] max-[960px]:flex-col">
-  <div class="relative flex w-[370px] min-h-[210px] shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-[#1e3a5f] to-[#0c0c0c] max-[960px]:w-full max-[960px]:min-h-[170px]">
+  <div class="relative flex w-[370px] min-h-[210px] shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-[#502314] to-[#2a1207] max-[960px]:w-full max-[960px]:min-h-[170px]">
     {image && (
       <img src={image} alt={title} class="absolute inset-0 h-full w-full object-cover" />
     )}
@@ -44,12 +44,12 @@ const formattedDate = date.toLocaleDateString('ja-JP', { year: 'numeric', month:
     )}
     <div class="relative z-1 w-full px-5 py-5 font-mono text-[0.62rem] leading-[1.8] text-white/55">
       <span class="text-white/25">// app router structure</span><br>
-      <span class="text-[#93c5fd]">src/</span><br>
-      &nbsp;&nbsp;<span class="text-[#fde68a]">features/</span><br>
-      &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#86efac]">auth/</span><br>
-      &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#86efac]">dashboard/</span><br>
-      &nbsp;&nbsp;<span class="text-[#fde68a]">shared/</span><br>
-      &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#86efac]">components/</span>
+      <span class="text-[#ffb37a]">src/</span><br>
+      &nbsp;&nbsp;<span class="text-[#ffd9a0]">features/</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#ffe8c2]">auth/</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#ffe8c2]">dashboard/</span><br>
+      &nbsp;&nbsp;<span class="text-[#ffd9a0]">shared/</span><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#ffe8c2]">components/</span>
     </div>
   </div>
   <div class="flex flex-1 flex-col p-[1.4rem]">
