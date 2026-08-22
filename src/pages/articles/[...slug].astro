@@ -24,105 +24,163 @@ const nextPost = currentIndex > 0 ? allPosts[currentIndex - 1] : null;
 
 const tocHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
-const formattedDate = post.data.date.toLocaleDateString('ja-JP', {
-  year: 'numeric', month: '2-digit', day: '2-digit',
-}).replace(/\//g, '.');
+const formattedDate = post.data.date
+  .toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' })
+  .replace(/\//g, '.');
 
-const tagColorMap: Record<string, { bg: string; text: string }> = {
-  'Next.js': { bg: 'bg-sky-light', text: 'text-[#0284c7]' },
-  'React': { bg: 'bg-purple-light', text: 'text-[#7c3aed]' },
-  'TypeScript': { bg: 'bg-sky-light', text: 'text-[#0284c7]' },
-  'Cloudflare': { bg: 'bg-accent-light', text: 'text-accent-dark' },
-  'Workers': { bg: 'bg-pink-light', text: 'text-[#db2777]' },
-  'Architecture': { bg: 'bg-lime-light', text: 'text-[#4d7c0f]' },
-  'Patterns': { bg: 'bg-purple-light', text: 'text-[#7c3aed]' },
-};
-const defaultTagColor = { bg: 'bg-accent-light', text: 'text-accent-dark' };
+const readingMinutes = Math.max(1, Math.round(post.body!.length / 600));
 ---
 
 <BaseLayout title={`${post.data.title} — DEV LOG`} description={post.data.description}>
-  <div class="relative z-1 mx-auto max-w-[1200px] px-8 pt-12 pb-20 max-sm:px-5 max-sm:pt-8">
-    <div class="grid grid-cols-[1fr_240px] gap-12 max-[960px]:grid-cols-1">
-      <!-- Main content -->
-      <article class="animate-slide-up min-w-0">
-        {post.data.image && (
-          <div class="mb-8 overflow-hidden rounded-2xl border-2 border-fg shadow-[3px_3px_0_var(--color-fg)]">
-            <img src={post.data.image} alt={post.data.title} class="h-[300px] w-full object-cover max-sm:h-[200px]" />
-          </div>
-        )}
-        <header class="mb-10">
-          <div class="mb-3 flex flex-wrap items-center gap-2">
-            <span class="font-mono text-[0.7rem] text-fg-muted">{formattedDate}</span>
-            {post.data.category && (
-              <span class="rounded-lg border-2 border-fg bg-bg-card px-2.5 py-0.5 font-mono text-[0.58rem] font-bold uppercase tracking-wider">
-                {post.data.category}
-              </span>
-            )}
-            {post.data.draft && (
-              <span class="rounded-lg border-2 border-yellow-400 bg-yellow-100 px-2.5 py-0.5 font-mono text-[0.58rem] font-bold uppercase tracking-wider text-yellow-700">
-                Draft
-              </span>
-            )}
-          </div>
-          <h1 class="mb-4 font-heading text-[clamp(1.5rem,3.5vw,2.4rem)] font-extrabold leading-[1.2] tracking-tight">
-            {post.data.title}
-          </h1>
-          <p class="mb-4 text-[0.95rem] leading-[1.8] text-fg-secondary">{post.data.description}</p>
-          <div class="flex flex-wrap gap-1.5">
-            {post.data.tags.map((tag: string) => {
-              const colors = tagColorMap[tag] || defaultTagColor;
-              return (
-                <a href={`/tags/${tag}`} class={`rounded-lg px-2.5 py-1 font-mono text-[0.62rem] no-underline ${colors.bg} ${colors.text}`}>
-                  {tag}
-                </a>
-              );
-            })}
-          </div>
-        </header>
+  <div class="mx-auto max-w-[1200px] px-8 pb-16 max-sm:px-5 max-sm:pb-10">
+    <nav class="mb-5 flex flex-wrap items-center gap-2 text-[0.85rem] font-medium text-fg-secondary max-sm:text-[0.78rem]">
+      <a href="/" class="no-underline text-fg-secondary transition-colors hover:text-accent-dark">記事</a>
+      <span class="text-fg-muted">／</span>
+      {post.data.category && (
+        <>
+          <a href="/tags/all" class="no-underline text-fg-secondary transition-colors hover:text-accent-dark">{post.data.category}</a>
+          <span class="text-fg-muted">／</span>
+        </>
+      )}
+      <span class="text-fg-muted">この記事</span>
+    </nav>
 
+    <!-- Article hero -->
+    <header class="animate-slide-up rounded-[30px] bg-mint px-11 py-10 max-sm:rounded-[22px] max-sm:px-6 max-sm:py-7">
+      <div class="mb-7 flex items-center gap-4 max-sm:mb-5">
+        <span class="flex h-[46px] w-[46px] shrink-0 items-center justify-center overflow-hidden rounded-[15px] bg-accent max-sm:h-[38px] max-sm:w-[38px]">
+          {post.data.image
+            ? <img src={post.data.image} alt="" class="h-full w-full object-cover" />
+            : <span class="font-code text-[0.9rem] font-bold text-white">&gt;_</span>}
+        </span>
+        <span class="text-[0.8rem] font-bold tracking-[0.18em] text-fg-secondary">
+          {(post.data.category ?? 'ARTICLE').toUpperCase()}
+        </span>
+        <span class="ml-auto text-[0.85rem] font-medium text-fg-muted max-sm:text-[0.75rem]">
+          {formattedDate} ／ {readingMinutes}分
+        </span>
+      </div>
+
+      <h1 class="font-heading text-[clamp(1.5rem,3.4vw,2.5rem)] font-black leading-[1.5] tracking-[0.01em] text-ink">
+        {post.data.title}
+      </h1>
+      <p class="mt-6 max-w-[720px] text-[0.95rem] leading-[2.1] text-fg-secondary max-sm:mt-4 max-sm:text-[0.88rem]">
+        {post.data.description}
+      </p>
+      <div class="mt-7 flex flex-wrap gap-2.5 max-sm:mt-5">
+        {post.data.tags.map((tag: string) => (
+          <a href={`/tags/${tag}`} class="rounded-full bg-white px-4 py-2 text-[0.8rem] font-medium text-fg-secondary no-underline transition-colors hover:text-accent-dark">
+            {tag}
+          </a>
+        ))}
+      </div>
+    </header>
+
+    <div class="mt-12 grid grid-cols-[1fr_300px] gap-12 max-lg:grid-cols-1 max-lg:gap-8 max-sm:mt-8">
+      <article class="min-w-0">
         <div class="prose max-w-none">
           <Content />
         </div>
 
-        <!-- Prev/Next -->
-        <nav class="mt-16 grid grid-cols-2 gap-4 max-sm:grid-cols-1">
+        <nav class="mt-16 grid grid-cols-2 gap-5 max-sm:grid-cols-1 max-sm:gap-3">
           {prevPost && (
-            <a href={`/articles/${prevPost.id}`} class="card-hover flex flex-col rounded-2xl border-2 border-fg bg-bg-card p-5 no-underline shadow-[3px_3px_0_var(--color-fg)]">
-              <span class="mb-1 text-[0.68rem] font-semibold text-fg-muted">&larr; Prev</span>
-              <span class="font-heading text-[0.9rem] font-bold text-fg">{prevPost.data.title}</span>
+            <a href={`/articles/${prevPost.id}`} class="soft-hover flex flex-col rounded-[22px] bg-mint px-7 py-6 no-underline max-sm:px-5 max-sm:py-4">
+              <span class="mb-2 text-[0.8rem] font-medium text-fg-secondary">&#9664; 前の記事</span>
+              <span class="font-heading text-[1rem] font-extrabold leading-[1.6] text-ink">{prevPost.data.title}</span>
             </a>
           )}
           {nextPost && (
-            <a href={`/articles/${nextPost.id}`} class="card-hover flex flex-col rounded-2xl border-2 border-fg bg-bg-card p-5 no-underline shadow-[3px_3px_0_var(--color-fg)] max-sm:col-start-1" style={!prevPost ? "grid-column-start: 2;" : ""}>
-              <span class="mb-1 text-[0.68rem] font-semibold text-fg-muted">Next &rarr;</span>
-              <span class="font-heading text-[0.9rem] font-bold text-fg">{nextPost.data.title}</span>
+            <a
+              href={`/articles/${nextPost.id}`}
+              class="soft-hover flex flex-col rounded-[22px] bg-mint px-7 py-6 text-right no-underline max-sm:px-5 max-sm:py-4 max-sm:text-left"
+              style={!prevPost ? 'grid-column-start: 2;' : ''}
+            >
+              <span class="mb-2 text-[0.8rem] font-medium text-fg-secondary">次の記事 &#9654;</span>
+              <span class="font-heading text-[1rem] font-extrabold leading-[1.6] text-ink">{nextPost.data.title}</span>
             </a>
           )}
         </nav>
       </article>
 
-      <!-- Sidebar TOC -->
-      {tocHeadings.length > 0 && (
-        <aside class="max-[960px]:hidden">
-          <div class="sticky top-[80px]">
-            <div class="rounded-2xl border-2 border-fg bg-bg-card p-5 shadow-[3px_3px_0_var(--color-fg)]">
-              <h2 class="mb-3 font-heading text-[0.85rem] font-extrabold">目次</h2>
-              <ul class="space-y-1.5">
+      <aside class="max-lg:hidden">
+        <div class="sticky top-[96px] flex flex-col gap-5">
+          {tocHeadings.length > 0 && (
+            <nav class="rounded-[22px] bg-mint px-6 py-6" id="toc">
+              <h2 class="mb-4 font-heading text-[0.95rem] font-extrabold text-ink">目次</h2>
+              <ul class="flex flex-col gap-1">
                 {tocHeadings.map((h) => (
-                  <li style={h.depth === 3 ? 'padding-left: 1rem;' : ''}>
+                  <li>
                     <a
                       href={`#${h.slug}`}
-                      class="block text-[0.75rem] leading-[1.6] text-fg-secondary no-underline transition-colors hover:text-accent"
+                      data-toc-link={h.slug}
+                      class:list={[
+                        'toc-link relative block py-1.5 pl-4 text-[0.85rem] leading-[1.7] text-fg-secondary no-underline transition-colors hover:text-fg',
+                        h.depth === 3 ? 'pl-7 text-[0.8rem]' : '',
+                      ]}
                     >
                       {h.text}
                     </a>
                   </li>
                 ))}
               </ul>
+            </nav>
+          )}
+
+          <div class="rounded-[22px] bg-white px-6 py-6 ring-1 ring-border">
+            <h2 class="mb-4 font-heading text-[0.95rem] font-extrabold text-ink">この記事のタグ</h2>
+            <div class="flex flex-wrap gap-2">
+              {post.data.tags.map((tag: string) => (
+                <a href={`/tags/${tag}`} class="rounded-full bg-mint px-3.5 py-1.5 text-[0.78rem] font-medium text-fg-secondary no-underline transition-colors hover:bg-accent hover:text-white">
+                  {tag}
+                </a>
+              ))}
             </div>
           </div>
-        </aside>
-      )}
+        </div>
+      </aside>
     </div>
   </div>
 </BaseLayout>
+
+<style is:global>
+  .toc-link::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.45rem;
+    bottom: 0.45rem;
+    width: 3px;
+    border-radius: 999px;
+    background: var(--color-accent);
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+</style>
+
+<script>
+  const links = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+  if (links.length > 0) {
+    const targets = links
+      .map((link) => document.getElementById(link.dataset.tocLink!))
+      .filter((el): el is HTMLElement => Boolean(el));
+
+    const setActive = (slug: string) => {
+      links.forEach((link) => link.classList.toggle('is-active', link.dataset.tocLink === slug));
+    };
+    setActive(links[0].dataset.tocLink!);
+
+    const visible = new Set<string>();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) visible.add(entry.target.id);
+          else visible.delete(entry.target.id);
+        });
+        const first = targets.find((target) => visible.has(target.id));
+        if (first) setActive(first.id);
+      },
+      { rootMargin: '-90px 0px -70% 0px' }
+    );
+    targets.forEach((target) => observer.observe(target));
+  }
+</script>

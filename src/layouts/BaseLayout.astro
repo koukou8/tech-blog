@@ -8,7 +8,7 @@ interface Props {
   description?: string;
 }
 
-const { title, description = 'Web開発・クラウド・設計パターンについて、実務で得た知見を共有するテックブログです。' } = Astro.props;
+const { title, description = '開発について幅広く書きます。うまくいったことも、まだ途中のことも。' } = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -21,7 +21,7 @@ const { title, description = 'Web開発・クラウド・設計パターンに�
   <title>{title}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 </head>
 <body class="min-h-screen">
   <Header />

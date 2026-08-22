@@ -1,22 +1,50 @@
 ---
 interface Props {
   categories: string[];
-  active?: string;
 }
-const { categories, active = 'All' } = Astro.props;
+const { categories } = Astro.props;
 ---
 
-<div class="flex gap-1.5 max-sm:hidden">
+<div class="flex flex-wrap gap-2.5 max-sm:hidden" id="category-filter">
+  <button
+    type="button"
+    data-filter="__all__"
+    class="filter-pill is-active cursor-pointer rounded-full px-6 py-2.5 text-[0.85rem] font-bold transition-colors"
+  >ぜんぶ</button>
   {categories.map((cat) => (
     <button
-      class:list={[
-        "font-body text-[0.72rem] font-semibold px-3.5 py-1.5 border-2 rounded-full cursor-pointer transition-all",
-        cat === active
-          ? "bg-accent text-white border-accent"
-          : "border-border text-fg-secondary bg-transparent hover:border-accent hover:text-accent"
-      ]}
-    >
-      {cat}
-    </button>
+      type="button"
+      data-filter={cat}
+      class="filter-pill cursor-pointer rounded-full px-6 py-2.5 text-[0.85rem] font-bold transition-colors"
+    >{cat}</button>
   ))}
 </div>
+
+<style>
+  .filter-pill {
+    background: var(--color-mint);
+    color: var(--color-fg-secondary);
+  }
+  .filter-pill:hover {
+    background: var(--color-mint-deep);
+    color: var(--color-fg);
+  }
+  .filter-pill.is-active {
+    background: var(--color-ink);
+    color: #fff;
+  }
+</style>
+
+<script>
+  const root = document.getElementById('category-filter');
+  root?.addEventListener('click', (event) => {
+    const button = (event.target as HTMLElement).closest<HTMLButtonElement>('.filter-pill');
+    if (!button) return;
+    const filter = button.dataset.filter;
+    root.querySelectorAll('.filter-pill').forEach((pill) => pill.classList.toggle('is-active', pill === button));
+    document.querySelectorAll<HTMLElement>('[data-post-card]').forEach((card) => {
+      const match = filter === '__all__' || card.dataset.cat === filter;
+      card.style.display = match ? '' : 'none';
+    });
+  });
+</script>

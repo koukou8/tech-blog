@@ -5,13 +5,17 @@ interface Props {
 const { tags } = Astro.props;
 ---
 
-<div class="animate-slide-up mt-10 flex flex-wrap items-center gap-5 rounded-2xl border-2 border-fg bg-bg-card px-7 py-5 shadow-[3px_3px_0_var(--color-fg)] max-sm:px-5 max-sm:py-4" style="animation-delay: 0.5s;">
-  <span class="whitespace-nowrap font-heading text-[0.85rem] font-extrabold">Tags</span>
-  <div class="flex flex-wrap gap-1.5">
+<div class="mt-6 rounded-[26px] bg-mint px-8 py-8 max-sm:rounded-[22px] max-sm:px-5 max-sm:py-6">
+  <div class="mb-6 flex items-center gap-3">
+    <span class="h-2.5 w-2.5 rounded-full bg-orange"></span>
+    <span class="font-heading text-[1rem] font-extrabold text-ink">タグでさがす</span>
+    <span class="text-[0.85rem] font-medium text-fg-muted">{tags.length}</span>
+  </div>
+  <div class="flex flex-wrap gap-3">
     {tags.map((tag) => (
       <a
         href={`/tags/${tag}`}
-        class="whitespace-nowrap rounded-full border-2 border-border px-3 py-1 font-mono text-[0.66rem] text-fg-secondary no-underline transition-all hover:border-accent hover:bg-accent-light hover:text-accent-dark"
+        class="rounded-full bg-white px-5 py-2.5 text-[0.85rem] font-medium text-fg-secondary no-underline transition-colors hover:bg-accent hover:text-white"
       >
         {tag}
       </a>

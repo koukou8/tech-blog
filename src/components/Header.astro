@@ -1,39 +1,31 @@
 ---
 const pathname = Astro.url.pathname;
+const isArticles = pathname === '/' || pathname.startsWith('/articles');
+const isTags = pathname.startsWith('/tags');
 ---
 
-<header class="sticky top-0 z-100 border-b-2 border-fg bg-bg/90 backdrop-blur-xl">
-  <div class="mx-auto flex h-[62px] max-w-[1200px] items-center justify-between px-8 max-sm:px-5">
-    <a href="/" class="flex items-center gap-2 font-heading text-base font-extrabold tracking-tight text-fg no-underline">
-      <div class="flex h-[30px] w-[30px] items-center justify-center rounded-[10px] bg-accent font-mono text-[0.7rem] font-bold text-white shadow-[0_2px_8px_rgba(240,124,66,0.3)]">
-        D
-      </div>
-      DEV LOG
+<header class="sticky top-0 z-100 bg-white/85 backdrop-blur-xl">
+  <div class="mx-auto flex h-[76px] max-w-[1200px] items-center justify-between px-8 max-sm:h-[64px] max-sm:px-5">
+    <a href="/" class="flex items-center gap-3 no-underline">
+      <span class="flex h-[38px] w-[38px] items-center justify-center rounded-[13px] bg-accent text-[1rem] font-extrabold text-white max-sm:h-[32px] max-sm:w-[32px]">D</span>
+      <span class="font-heading text-[1.15rem] font-extrabold tracking-[0.02em] text-fg max-sm:text-[1rem]">DEV LOG</span>
     </a>
-    {/* <nav class="flex items-center gap-1.5 max-sm:hidden">
-      <a href="/" class:list={["text-[0.8rem] font-semibold no-underline px-3.5 py-1.5 rounded-[10px] transition-all", pathname === '/' ? 'bg-accent text-white' : 'text-fg hover:bg-accent-light hover:text-accent-dark']}>
-        Home
-      </a>
-      <a href="/tags/all" class:list={["text-[0.8rem] font-semibold no-underline px-3.5 py-1.5 rounded-[10px] transition-all", pathname.startsWith('/tags') ? 'bg-accent text-white' : 'text-fg hover:bg-accent-light hover:text-accent-dark']}>
-        Tags
-      </a>
+    <nav class="flex items-center gap-2">
+      <a
+        href="/"
+        class:list={[
+          'rounded-full px-5 py-2 text-[0.85rem] font-bold no-underline transition-colors max-sm:px-3.5 max-sm:text-[0.78rem]',
+          isArticles ? 'bg-ink text-white' : 'text-fg-secondary hover:bg-mint hover:text-fg',
+        ]}
+      >記事</a>
+      <a
+        href="/tags/all"
+        class:list={[
+          'rounded-full px-5 py-2 text-[0.85rem] font-bold no-underline transition-colors max-sm:px-3.5 max-sm:text-[0.78rem]',
+          isTags ? 'bg-ink text-white' : 'text-fg-secondary hover:bg-mint hover:text-fg',
+        ]}
+      >タグ</a>
+      <a href="/rss.xml" class="rounded-full px-5 py-2 text-[0.85rem] font-bold text-fg-secondary no-underline transition-colors hover:bg-mint hover:text-fg max-sm:px-3.5 max-sm:text-[0.78rem]">RSS</a>
     </nav>
-    <button class="hidden max-sm:block border-2 border-fg rounded-[10px] bg-transparent w-9 h-8 relative cursor-pointer" aria-label="Menu" id="menu-toggle">
-      <span class="absolute left-1/2 -translate-x-1/2 top-[8px] block h-0.5 w-4 bg-fg transition-all"></span>
-      <span class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 block h-0.5 w-4 bg-fg transition-all"></span>
-      <span class="absolute left-1/2 -translate-x-1/2 bottom-[8px] block h-0.5 w-4 bg-fg transition-all"></span>
-    </button>
   </div>
-  <nav id="mobile-nav" class="hidden border-t-2 border-fg bg-bg px-5 py-3 sm:hidden">
-    <a href="/" class="block py-2 text-[0.85rem] font-semibold text-fg no-underline">Home</a>
-    <a href="/tags/all" class="block py-2 text-[0.85rem] font-semibold text-fg no-underline">Tags</a>
-  </nav> */}
 </header>
-
-<script>
-  const toggle = document.getElementById('menu-toggle');
-  const nav = document.getElementById('mobile-nav');
-  toggle?.addEventListener('click', () => {
-    nav?.classList.toggle('hidden');
-  });
-</script>

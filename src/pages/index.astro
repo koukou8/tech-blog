@@ -11,52 +11,52 @@ const allPosts = (await getCollection('blog'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const featuredPost = allPosts.find((p) => p.data.featured);
-const regularPosts = allPosts.filter((p) => !p.data.featured);
+// The lead article is the one flagged as featured, otherwise the newest one.
+const leadPost = allPosts.find((p) => p.data.featured) ?? allPosts[0];
+const restPosts = allPosts.filter((p) => p.id !== leadPost?.id);
 
 const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
-
-const gradients: Array<'v1' | 'v2' | 'v3'> = ['v2', 'v3', 'v1'];
+const categories = [...new Set(allPosts.map((p) => p.data.category).filter(Boolean))] as string[];
 ---
 
-<BaseLayout title="DEV LOG">
+<BaseLayout title="DEV LOG — 開発の、やわらかい倉庫。">
   <HeroSection articleCount={allPosts.length} tagCount={allTags.length} />
 
-  <div class="relative z-1 mx-auto max-w-[1200px] px-8 pb-20 max-sm:px-5 max-sm:pb-16">
-    <div class="mb-7 flex items-center justify-between">
-      <h2 class="flex items-center gap-2 font-heading text-[1.35rem] font-extrabold tracking-tight">
-        <span class="inline-block h-2.5 w-2.5 rounded-full bg-accent"></span>
-        Latest Articles
-      </h2>
-      <FilterPills categories={['All', 'Frontend', 'Infra', 'Design']} />
+  <div class="mx-auto max-w-[1200px] px-8 pb-16 max-sm:px-5 max-sm:pb-10">
+    <div class="mb-6 flex items-center justify-between gap-6">
+      <h2 class="font-heading text-[1.15rem] font-extrabold tracking-[0.01em] text-ink">さいきん書いたもの</h2>
+      <FilterPills categories={categories} />
     </div>
 
-    <div class="grid grid-cols-3 gap-[1.15rem] max-[960px]:grid-cols-2 max-sm:grid-cols-1">
-      {featuredPost && (
-        <FeaturedCard
-          title={featuredPost.data.title}
-          description={featuredPost.data.description}
-          date={featuredPost.data.date}
-          tags={featuredPost.data.tags}
-          slug={featuredPost.id}
-          category={featuredPost.data.category}
-          image={featuredPost.data.image}
-          draft={featuredPost.data.draft}
-        />
+    <div class="grid grid-cols-2 gap-6 max-sm:grid-cols-1 max-sm:gap-4">
+      {leadPost && (
+        <div class="col-span-full" data-post-card data-cat={leadPost.data.category}>
+          <FeaturedCard
+            title={leadPost.data.title}
+            description={leadPost.data.description}
+            date={leadPost.data.date}
+            tags={leadPost.data.tags}
+            slug={leadPost.id}
+            category={leadPost.data.category}
+            image={leadPost.data.image}
+            draft={leadPost.data.draft}
+          />
+        </div>
       )}
 
-      {regularPosts.map((post, i) => (
-        <ArticleCard
-          title={post.data.title}
-          description={post.data.description}
-          date={post.data.date}
-          tags={post.data.tags}
-          slug={post.id}
-          gradient={gradients[i % 3]}
-          category={post.data.category}
-          image={post.data.image}
-          draft={post.data.draft}
-        />
+      {restPosts.map((post) => (
+        <div data-post-card data-cat={post.data.category}>
+          <ArticleCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.date}
+            tags={post.data.tags}
+            slug={post.id}
+            category={post.data.category}
+            image={post.data.image}
+            draft={post.data.draft}
+          />
+        </div>
       ))}
     </div>
 

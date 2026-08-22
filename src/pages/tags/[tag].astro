@@ -4,97 +4,70 @@ import ArticleCard from '../../components/ArticleCard.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
+  const posts = (await getCollection('blog'))
+    .filter((p) => !p.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
   const allTags = [...new Set(posts.flatMap((p) => p.data.tags))];
 
   const paths = allTags.map((tag) => ({
     params: { tag },
-    props: {
-      tag,
-      posts: posts
-        .filter((p) => p.data.tags.includes(tag))
-        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
-    },
+    props: { tag, posts: posts.filter((p) => p.data.tags.includes(tag)) },
   }));
 
-  // "all" tag shows every post
-  paths.push({
-    params: { tag: 'all' },
-    props: {
-      tag: 'all',
-      posts: posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
-    },
-  });
+  paths.push({ params: { tag: 'all' }, props: { tag: 'all', posts } });
 
   return paths;
 }
 
 const { tag, posts } = Astro.props;
 
-const allPosts = await getCollection('blog');
+const allPosts = (await getCollection('blog')).filter((p) => !p.data.draft);
 const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
-
-const gradients: Array<'v1' | 'v2' | 'v3'> = ['v1', 'v2', 'v3'];
 ---
 
-<BaseLayout title={`${tag === 'all' ? 'All Articles' : tag} — DEV LOG`}>
-  <div class="relative z-1 mx-auto max-w-[1200px] px-8 pt-12 pb-20 max-sm:px-5 max-sm:pt-8">
-    <div class="animate-slide-up mb-8">
-      <h1 class="mb-3 font-heading text-[clamp(1.5rem,3.5vw,2.2rem)] font-extrabold tracking-tight">
-        {tag === 'all' ? (
-          <>
-            <span class="inline-block h-3 w-3 rounded-full bg-accent"></span>{' '}
-            All Articles
-          </>
-        ) : (
-          <>
-            Tag: <span class="inline-block -rotate-1 rounded-lg bg-accent px-2 py-0.5 text-white">{tag}</span>
-          </>
-        )}
+<BaseLayout title={`${tag === 'all' ? 'すべてのタグ' : tag} — DEV LOG`}>
+  <div class="mx-auto max-w-[1200px] px-8 pb-16 max-sm:px-5 max-sm:pb-10">
+    <div class="animate-slide-up rounded-[30px] bg-mint px-11 py-10 max-sm:rounded-[22px] max-sm:px-6 max-sm:py-7">
+      <div class="mb-5 flex items-center gap-3">
+        <span class="h-2.5 w-2.5 rounded-full bg-orange"></span>
+        <span class="text-[0.8rem] font-bold tracking-[0.18em] text-fg-secondary">TAG</span>
+      </div>
+      <h1 class="font-heading text-[clamp(1.6rem,3.4vw,2.4rem)] font-black leading-[1.5] tracking-[0.01em] text-ink">
+        {tag === 'all' ? 'タグでさがす' : tag}
       </h1>
-      <p class="text-[0.9rem] text-fg-secondary">
-        {posts.length} article{posts.length !== 1 ? 's' : ''}
-      </p>
+      <p class="mt-4 text-[0.9rem] font-medium text-fg-secondary">{posts.length}件の記事</p>
     </div>
 
-    <!-- Tag navigation -->
-    <div class="mb-8 flex flex-wrap gap-1.5">
+    <div class="mt-8 flex flex-wrap gap-3">
       <a
         href="/tags/all"
         class:list={[
-          "whitespace-nowrap rounded-full border-2 px-3 py-1 font-mono text-[0.66rem] no-underline transition-all",
-          tag === 'all'
-            ? "border-accent bg-accent text-white"
-            : "border-border text-fg-secondary hover:border-accent hover:bg-accent-light hover:text-accent-dark"
+          'rounded-full px-5 py-2.5 text-[0.85rem] font-medium no-underline transition-colors',
+          tag === 'all' ? 'bg-ink text-white' : 'bg-mint text-fg-secondary hover:bg-mint-deep hover:text-fg',
         ]}
-      >
-        All
-      </a>
+      >ぜんぶ</a>
       {allTags.map((t) => (
         <a
           href={`/tags/${t}`}
           class:list={[
-            "whitespace-nowrap rounded-full border-2 px-3 py-1 font-mono text-[0.66rem] no-underline transition-all",
-            tag === t
-              ? "border-accent bg-accent text-white"
-              : "border-border text-fg-secondary hover:border-accent hover:bg-accent-light hover:text-accent-dark"
+            'rounded-full px-5 py-2.5 text-[0.85rem] font-medium no-underline transition-colors',
+            tag === t ? 'bg-ink text-white' : 'bg-mint text-fg-secondary hover:bg-mint-deep hover:text-fg',
           ]}
-        >
-          {t}
-        </a>
+        >{t}</a>
       ))}
     </div>
 
-    <div class="grid grid-cols-3 gap-[1.15rem] max-[960px]:grid-cols-2 max-sm:grid-cols-1">
-      {posts.map((post, i) => (
+    <div class="mt-8 grid grid-cols-2 gap-6 max-sm:grid-cols-1 max-sm:gap-4">
+      {posts.map((post) => (
         <ArticleCard
           title={post.data.title}
           description={post.data.description}
           date={post.data.date}
           tags={post.data.tags}
           slug={post.id}
-          gradient={gradients[i % 3]}
           category={post.data.category}
+          image={post.data.image}
+          draft={post.data.draft}
         />
       ))}
     </div>
