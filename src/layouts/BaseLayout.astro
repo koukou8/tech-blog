@@ -6,9 +6,23 @@ import Footer from '../components/Footer.astro';
 interface Props {
   title: string;
   description?: string;
+  /** 'compact' shows the small nameplate bar; 'none' lets the page draw its own masthead. */
+  chrome?: 'compact' | 'none';
+  pageLabel?: string;
+  section?: string;
+  prevHref?: string;
+  nextHref?: string;
 }
 
-const { title, description = 'Web開発・クラウド・設計パターンについて、実務で得た知見を共有するテックブログです。' } = Astro.props;
+const {
+  title,
+  description = 'Web・クラウド・設計パターンを扱う開発日報。実務で得た知見を記録しています。',
+  chrome = 'compact',
+  pageLabel,
+  section,
+  prevHref,
+  nextHref,
+} = Astro.props;
 ---
 
 <!DOCTYPE html>
@@ -21,11 +35,13 @@ const { title, description = 'Web開発・クラウド・設計パターンに�
   <title>{title}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=M+PLUS+Rounded+1c:wght@400;500;700;800;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
 </head>
 <body class="min-h-screen">
-  <Header />
-  <slot />
-  <Footer />
+  <div class="mx-auto max-w-[1180px] px-10 max-sm:px-5">
+    {chrome === 'compact' && <Header pageLabel={pageLabel} section={section} prevHref={prevHref} nextHref={nextHref} />}
+    <slot />
+    <Footer />
+  </div>
 </body>
 </html>

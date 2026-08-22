@@ -3,20 +3,27 @@ interface Props {
   categories: string[];
   active?: string;
 }
-const { categories, active = 'All' } = Astro.props;
+const { categories, active = '総合' } = Astro.props;
 ---
 
-<div class="flex gap-1.5 max-sm:hidden">
-  {categories.map((cat) => (
-    <button
+<div class="border border-ink bg-cyan-pale p-4">
+  <p class="mb-3 font-mono text-[0.78rem] font-bold tracking-[0.16em] text-ink">面　SECTION</p>
+  <div class="flex flex-wrap gap-2">
+    <a
+      href="/"
       class:list={[
-        "font-body text-[0.72rem] font-semibold px-3.5 py-1.5 border-2 rounded-full cursor-pointer transition-all",
-        cat === active
-          ? "bg-accent text-white border-accent"
-          : "border-border text-fg-secondary bg-transparent hover:border-accent hover:text-accent"
+        'border border-ink px-3 py-1 font-mono text-[0.76rem] no-underline',
+        active === '総合' ? 'bg-ink text-white' : 'bg-white text-ink hover:bg-cyan',
       ]}
-    >
-      {cat}
-    </button>
-  ))}
+    >総合</a>
+    {categories.map((cat) => (
+      <a
+        href={`/tags/${cat}`}
+        class:list={[
+          'border border-ink px-3 py-1 font-mono text-[0.76rem] no-underline',
+          active === cat ? 'bg-ink text-white' : 'bg-white text-ink hover:bg-cyan',
+        ]}
+      >{cat}</a>
+    ))}
+  </div>
 </div>

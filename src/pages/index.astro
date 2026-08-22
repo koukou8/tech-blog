@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import HeroSection from '../components/HeroSection.astro';
+import Masthead from '../components/Masthead.astro';
 import FeaturedCard from '../components/FeaturedCard.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import TagBar from '../components/TagBar.astro';
@@ -11,55 +11,84 @@ const allPosts = (await getCollection('blog'))
   .filter((p) => !p.data.draft)
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const featuredPost = allPosts.find((p) => p.data.featured);
-const regularPosts = allPosts.filter((p) => !p.data.featured);
+const [leadPost, ...restPosts] = allPosts;
 
 const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
-
-const gradients: Array<'v1' | 'v2' | 'v3'> = ['v2', 'v3', 'v1'];
+const categories = [...new Set(allPosts.map((p) => p.data.category).filter(Boolean))] as string[];
 ---
 
-<BaseLayout title="DEV LOG">
-  <HeroSection articleCount={allPosts.length} tagCount={allTags.length} />
+<BaseLayout title="開発日報 — DEV LOG" chrome="none">
+  <Masthead />
 
-  <div class="relative z-1 mx-auto max-w-[1200px] px-8 pb-20 max-sm:px-5 max-sm:pb-16">
-    <div class="mb-7 flex items-center justify-between">
-      <h2 class="flex items-center gap-2 font-heading text-[1.35rem] font-extrabold tracking-tight">
-        <span class="inline-block h-2.5 w-2.5 rounded-full bg-accent"></span>
-        Latest Articles
-      </h2>
-      <FilterPills categories={['All', 'Frontend', 'Infra', 'Design']} />
-    </div>
-
-    <div class="grid grid-cols-3 gap-[1.15rem] max-[960px]:grid-cols-2 max-sm:grid-cols-1">
-      {featuredPost && (
+  <!-- 一面 -->
+  <div class="grid grid-cols-[1fr_300px] max-lg:grid-cols-1">
+    <div class="border-r border-ink py-8 pr-9 max-lg:border-r-0 max-lg:pr-0 max-sm:py-6">
+      {leadPost && (
         <FeaturedCard
-          title={featuredPost.data.title}
-          description={featuredPost.data.description}
-          date={featuredPost.data.date}
-          tags={featuredPost.data.tags}
-          slug={featuredPost.id}
-          category={featuredPost.data.category}
-          image={featuredPost.data.image}
-          draft={featuredPost.data.draft}
+          title={leadPost.data.title}
+          description={leadPost.data.description}
+          date={leadPost.data.date}
+          tags={leadPost.data.tags}
+          slug={leadPost.id}
+          category={leadPost.data.category}
+          body={leadPost.body ?? ''}
+          draft={leadPost.data.draft}
         />
       )}
+    </div>
 
-      {regularPosts.map((post, i) => (
+    <!-- 本日の目次 -->
+    <aside class="py-8 pl-9 max-lg:border-t max-lg:border-ink max-lg:pl-0 max-sm:py-6">
+      <h2 class="border-b-2 border-ink pb-2.5 font-mincho text-[1.05rem] tracking-[0.04em]" style="font-weight: 800;">本日の目次</h2>
+      <ol class="mb-7">
+        {allPosts.map((post, i) => (
+          <li class="border-b border-rule py-3.5">
+            <a href={`/articles/${post.id}`} class="flex items-end gap-1 text-ink no-underline hover:bg-cyan-pale">
+              <span class="min-w-0 font-mincho text-[0.95rem] leading-[1.6]">{post.data.title}</span>
+              <span class="leader min-w-[26px]"></span>
+              <span class="shrink-0 font-gothic text-[0.78rem] font-bold">{i + 1}面</span>
+            </a>
+          </li>
+        ))}
+      </ol>
+
+      <FilterPills categories={categories} />
+
+      <div class="mt-6 font-mono text-[0.78rem] leading-[1.95] tracking-[0.08em] text-ink-soft">
+        <p>発行　DEV LOG</p>
+        <p>編集　一名</p>
+        <p>GITHUB　／　X　／　RSS</p>
+      </div>
+    </aside>
+  </div>
+
+  <div class="rule-thick"></div>
+
+  <!-- 二面以降 -->
+  <div class="grid grid-cols-2 max-md:grid-cols-1">
+    {restPosts.map((post, i) => (
+      <div
+        class:list={[
+          'py-8 max-sm:py-6',
+          i % 2 === 0 ? 'border-r border-ink pr-9 max-md:border-r-0 max-md:pr-0' : 'pl-9 max-md:border-t max-md:border-rule max-md:pl-0',
+        ]}
+      >
         <ArticleCard
           title={post.data.title}
           description={post.data.description}
           date={post.data.date}
           tags={post.data.tags}
           slug={post.id}
-          gradient={gradients[i % 3]}
           category={post.data.category}
-          image={post.data.image}
+          body={post.body ?? ''}
+          page={i + 2}
           draft={post.data.draft}
         />
-      ))}
-    </div>
-
-    <TagBar tags={allTags} />
+      </div>
+    ))}
   </div>
+
+  <div class="rule-thick pt-7"></div>
+
+  <TagBar tags={allTags} />
 </BaseLayout>

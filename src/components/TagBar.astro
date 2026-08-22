@@ -1,20 +1,22 @@
 ---
 interface Props {
   tags: string[];
+  active?: string;
 }
-const { tags } = Astro.props;
+const { tags, active } = Astro.props;
 ---
 
-<div class="animate-slide-up mt-10 flex flex-wrap items-center gap-5 rounded-2xl border-2 border-fg bg-bg-card px-7 py-5 shadow-[3px_3px_0_var(--color-fg)] max-sm:px-5 max-sm:py-4" style="animation-delay: 0.5s;">
-  <span class="whitespace-nowrap font-heading text-[0.85rem] font-extrabold">Tags</span>
-  <div class="flex flex-wrap gap-1.5">
+<section class="pt-6">
+  <h2 class="mb-5 font-mincho text-[1.05rem] tracking-[0.06em]" style="font-weight: 800;">総索引</h2>
+  <div class="flex flex-wrap gap-x-9 gap-y-3.5 max-sm:gap-x-5">
     {tags.map((tag) => (
       <a
         href={`/tags/${tag}`}
-        class="whitespace-nowrap rounded-full border-2 border-border px-3 py-1 font-mono text-[0.66rem] text-fg-secondary no-underline transition-all hover:border-accent hover:bg-accent-light hover:text-accent-dark"
-      >
-        {tag}
-      </a>
+        class:list={[
+          'font-mincho text-[1.05rem] leading-none text-ink no-underline hover:bg-cyan-pale max-sm:text-[0.92rem]',
+          tag === active ? 'bg-cyan px-2 py-1' : '',
+        ]}
+      >{tag}</a>
     ))}
   </div>
-</div>
+</section>

@@ -1,0 +1,38 @@
+---
+import { getCollection } from 'astro:content';
+
+const posts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+
+const tagCount = new Set(posts.flatMap((p) => p.data.tags)).size;
+const issue = posts.length;
+
+const latest = posts[0]?.data.date ?? new Date();
+const weekday = ['日', '月', '火', '水', '木', '金', '土'][latest.getDay()];
+const issueDate = `${latest.getFullYear()}年${latest.getMonth() + 1}月${latest.getDate()}日（${weekday}）`;
+---
+
+<header class="animate-fade-up">
+  <div class="flex items-center justify-between py-3 font-mono text-[0.72rem] tracking-[0.3em] text-ink-soft max-sm:tracking-[0.12em] max-sm:text-[0.6rem]">
+    <span>第 {issue} 号</span>
+    <span class="max-sm:hidden">WEB・クラウド・設計パターン</span>
+    <span>1部　0円</span>
+  </div>
+
+  <div class="rule-hair"></div>
+
+  <h1 class="py-7 text-center font-mincho text-[clamp(2.6rem,7.5vw,5rem)] leading-none tracking-[0.16em] max-sm:py-5" style="font-weight: 800;">
+    開発日報
+  </h1>
+
+  <div class="rule-thick"></div>
+
+  <div class="flex items-center justify-between py-2.5 font-mono text-[0.75rem] tracking-[0.12em] text-ink-soft max-sm:text-[0.6rem] max-sm:tracking-[0.04em]">
+    <span>{issueDate}</span>
+    <span class="tracking-[0.22em] max-md:hidden">DEV LOG — WAREHOUSE OF DEVELOPMENT</span>
+    <span>記事 {issue}／タグ {tagCount}</span>
+  </div>
+
+  <div class="rule-double"></div>
+</header>

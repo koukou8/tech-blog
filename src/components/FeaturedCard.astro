@@ -1,4 +1,6 @@
 ---
+import { toColumnText, dotDate } from '../lib/news';
+
 interface Props {
   title: string;
   description: string;
@@ -6,82 +8,48 @@ interface Props {
   tags: string[];
   slug: string;
   category?: string;
-  image?: string;
+  body: string;
   draft?: boolean;
 }
 
-const { title, description, date, tags, slug, category, image, draft } = Astro.props;
+const { title, description, date, tags, slug, category, body, draft } = Astro.props;
 
-const tagColorMap: Record<string, { bg: string; text: string }> = {
-  'Next.js': { bg: 'bg-sky-light', text: 'text-[#a06400]' },
-  'React': { bg: 'bg-purple-light', text: 'text-[#7a4a1c]' },
-  'TypeScript': { bg: 'bg-sky-light', text: 'text-[#a06400]' },
-  'Cloudflare': { bg: 'bg-accent-light', text: 'text-accent-dark' },
-  'Workers': { bg: 'bg-pink-light', text: 'text-[#b8350f]' },
-  'Architecture': { bg: 'bg-lime-light', text: 'text-[#4d6b12]' },
-  'Patterns': { bg: 'bg-purple-light', text: 'text-[#7a4a1c]' },
-};
-
-const defaultTagColor = { bg: 'bg-accent-light', text: 'text-accent-dark' };
-
-const formattedDate = date.toLocaleDateString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '.');
+const column = toColumnText(body, 300);
+const dropcap = column.charAt(0);
+const rest = column.slice(1);
 ---
 
-<a href={`/articles/${slug}`} class="card-hover col-span-full flex flex-row overflow-hidden rounded-2xl border-2 border-fg bg-bg-card no-underline shadow-[3px_3px_0_var(--color-fg)] max-[960px]:flex-col">
-  <div class="relative flex w-[370px] min-h-[210px] shrink-0 items-center justify-center overflow-hidden bg-gradient-to-br from-[#502314] to-[#2a1207] max-[960px]:w-full max-[960px]:min-h-[170px]">
-    {image && (
-      <img src={image} alt={title} class="absolute inset-0 h-full w-full object-cover" />
-    )}
-    {category && (
-      <span class="absolute top-3 left-3 z-2 rounded-lg border-2 border-fg bg-bg-card px-2.5 py-1 font-mono text-[0.58rem] font-bold uppercase tracking-wider text-fg">
-        {category}
-      </span>
-    )}
-    {draft && (
-      <span class="absolute top-3 right-3 z-2 rounded-lg border-2 border-yellow-400 bg-yellow-100 px-2.5 py-1 font-mono text-[0.58rem] font-bold uppercase tracking-wider text-yellow-700">
-        Draft
-      </span>
-    )}
-    <div class="relative z-1 w-full px-5 py-5 font-mono text-[0.62rem] leading-[1.8] text-white/55">
-      <span class="text-white/25">// app router structure</span><br>
-      <span class="text-[#ffb37a]">src/</span><br>
-      &nbsp;&nbsp;<span class="text-[#ffd9a0]">features/</span><br>
-      &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#ffe8c2]">auth/</span><br>
-      &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#ffe8c2]">dashboard/</span><br>
-      &nbsp;&nbsp;<span class="text-[#ffd9a0]">shared/</span><br>
-      &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-[#ffe8c2]">components/</span>
-    </div>
+<article class="animate-fade-up">
+  <div class="mb-5 flex items-center gap-4">
+    <span class="badge bg-cyan text-ink">一面</span>
+    <span class="font-mono text-[0.78rem] tracking-[0.14em] text-ink-soft max-sm:text-[0.64rem]">
+      {(category ?? 'ARTICLE').toUpperCase()}　／　{dotDate(date)}
+    </span>
+    {draft && <span class="badge bg-orange text-ink">校了前</span>}
   </div>
-  <div class="flex flex-1 flex-col p-[1.4rem]">
-    <span class="mb-1.5 font-mono text-[0.62rem] text-fg-muted">{formattedDate}</span>
-    <h3 class="mb-1.5 font-heading text-[1.3rem] font-bold leading-[1.45] tracking-tight text-fg">{title}</h3>
-    <p class="mb-3.5 flex-1 text-[0.82rem] leading-[1.75] text-fg-secondary">{description}</p>
-    <div class="mt-auto flex items-center justify-between">
-      <div class="flex flex-wrap gap-1.5">
-        {tags.slice(0, 3).map((tag) => {
-          const colors = tagColorMap[tag] || defaultTagColor;
-          return (
-            <span class={`rounded-lg px-2 py-0.5 font-mono text-[0.56rem] ${colors.bg} ${colors.text}`}>
-              {tag}
-            </span>
-          );
-        })}
-      </div>
-      <div class="card-arrow flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-border transition-all">
-        <svg class="h-[13px] w-[13px] stroke-fg-muted transition-colors" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round">
-          <path d="M5 12h14M12 5l7 7-7 7"/>
-        </svg>
-      </div>
-    </div>
-  </div>
-</a>
 
-<style>
-  a:hover .card-arrow {
-    background: var(--color-accent);
-    border-color: var(--color-accent);
-  }
-  a:hover .card-arrow svg {
-    stroke: white;
-  }
-</style>
+  <h2 class="font-mincho text-[clamp(1.9rem,4.4vw,3.3rem)] leading-[1.35] tracking-[0.01em]" style="font-weight: 800;">
+    <a href={`/articles/${slug}`} class="text-ink no-underline hover:underline">{title}</a>
+  </h2>
+
+  <p class="mt-6 border-l-4 border-orange pl-5 font-mincho text-[1.08rem] leading-[1.9] max-sm:text-[0.95rem]">
+    {description}
+  </p>
+
+  <div class="newscol columns-3 mt-7 text-[0.9rem] leading-[2] max-lg:columns-2 max-sm:columns-1">
+    <p><span class="dropcap">{dropcap}</span>{rest}</p>
+  </div>
+
+  <div class="rule-thin mt-7 pt-3.5">
+    <div class="flex items-center justify-between gap-4">
+      <div class="flex flex-wrap gap-4 font-mono text-[0.76rem] text-ink-soft max-sm:gap-2 max-sm:text-[0.62rem]">
+        {tags.slice(0, 3).map((tag) => (
+          <a href={`/tags/${tag}`} class="text-ink-soft no-underline hover:text-ink">#{tag}</a>
+        ))}
+      </div>
+      <a href={`/articles/${slug}`} class="shrink-0 font-gothic text-[0.82rem] font-bold text-ink no-underline hover:underline max-sm:text-[0.72rem]">
+        全文へ &#9654;
+      </a>
+    </div>
+  </div>
+</article>

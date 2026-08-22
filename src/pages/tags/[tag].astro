@@ -1,102 +1,69 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
+import TagBar from '../../components/TagBar.astro';
 import { getCollection } from 'astro:content';
 
 export async function getStaticPaths() {
-  const posts = await getCollection('blog');
+  const posts = (await getCollection('blog'))
+    .filter((p) => !p.data.draft)
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
   const allTags = [...new Set(posts.flatMap((p) => p.data.tags))];
 
   const paths = allTags.map((tag) => ({
     params: { tag },
-    props: {
-      tag,
-      posts: posts
-        .filter((p) => p.data.tags.includes(tag))
-        .sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
-    },
+    props: { tag, posts: posts.filter((p) => p.data.tags.includes(tag)) },
   }));
 
-  // "all" tag shows every post
-  paths.push({
-    params: { tag: 'all' },
-    props: {
-      tag: 'all',
-      posts: posts.sort((a, b) => b.data.date.getTime() - a.data.date.getTime()),
-    },
-  });
+  paths.push({ params: { tag: 'all' }, props: { tag: 'all', posts } });
 
   return paths;
 }
 
 const { tag, posts } = Astro.props;
 
-const allPosts = await getCollection('blog');
+const allPosts = (await getCollection('blog'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))];
-
-const gradients: Array<'v1' | 'v2' | 'v3'> = ['v1', 'v2', 'v3'];
+const label = tag === 'all' ? '総索引' : tag;
 ---
 
-<BaseLayout title={`${tag === 'all' ? 'All Articles' : tag} — DEV LOG`}>
-  <div class="relative z-1 mx-auto max-w-[1200px] px-8 pt-12 pb-20 max-sm:px-5 max-sm:pt-8">
-    <div class="animate-slide-up mb-8">
-      <h1 class="mb-3 font-heading text-[clamp(1.5rem,3.5vw,2.2rem)] font-extrabold tracking-tight">
-        {tag === 'all' ? (
-          <>
-            <span class="inline-block h-3 w-3 rounded-full bg-accent"></span>{' '}
-            All Articles
-          </>
-        ) : (
-          <>
-            Tag: <span class="inline-block -rotate-1 rounded-lg bg-accent px-2 py-0.5 text-white">{tag}</span>
-          </>
-        )}
-      </h1>
-      <p class="text-[0.9rem] text-fg-secondary">
-        {posts.length} article{posts.length !== 1 ? 's' : ''}
-      </p>
+<BaseLayout title={`${label} — 開発日報`} pageLabel="総索引" section={tag === 'all' ? undefined : tag}>
+  <section class="animate-fade-up pt-8 max-sm:pt-6">
+    <div class="mb-5 flex flex-wrap items-center gap-4">
+      <span class="badge bg-cyan text-ink">索引</span>
+      <span class="font-mono text-[0.78rem] tracking-[0.14em] text-ink-soft">該当 {posts.length} 件</span>
     </div>
+    <h1 class="font-mincho text-[clamp(1.7rem,4vw,2.8rem)] leading-[1.35]" style="font-weight: 800;">{label}</h1>
 
-    <!-- Tag navigation -->
-    <div class="mb-8 flex flex-wrap gap-1.5">
-      <a
-        href="/tags/all"
-        class:list={[
-          "whitespace-nowrap rounded-full border-2 px-3 py-1 font-mono text-[0.66rem] no-underline transition-all",
-          tag === 'all'
-            ? "border-accent bg-accent text-white"
-            : "border-border text-fg-secondary hover:border-accent hover:bg-accent-light hover:text-accent-dark"
-        ]}
-      >
-        All
-      </a>
-      {allTags.map((t) => (
-        <a
-          href={`/tags/${t}`}
+    <div class="rule-thick mt-7"></div>
+
+    <div class="grid grid-cols-2 max-md:grid-cols-1">
+      {posts.map((post, i) => (
+        <div
           class:list={[
-            "whitespace-nowrap rounded-full border-2 px-3 py-1 font-mono text-[0.66rem] no-underline transition-all",
-            tag === t
-              ? "border-accent bg-accent text-white"
-              : "border-border text-fg-secondary hover:border-accent hover:bg-accent-light hover:text-accent-dark"
+            'py-8 max-sm:py-6',
+            i % 2 === 0 ? 'border-r border-ink pr-9 max-md:border-r-0 max-md:pr-0' : 'pl-9 max-md:border-t max-md:border-rule max-md:pl-0',
           ]}
         >
-          {t}
-        </a>
+          <ArticleCard
+            title={post.data.title}
+            description={post.data.description}
+            date={post.data.date}
+            tags={post.data.tags}
+            slug={post.id}
+            category={post.data.category}
+            body={post.body ?? ''}
+            page={i + 1}
+            draft={post.data.draft}
+          />
+        </div>
       ))}
     </div>
 
-    <div class="grid grid-cols-3 gap-[1.15rem] max-[960px]:grid-cols-2 max-sm:grid-cols-1">
-      {posts.map((post, i) => (
-        <ArticleCard
-          title={post.data.title}
-          description={post.data.description}
-          date={post.data.date}
-          tags={post.data.tags}
-          slug={post.id}
-          gradient={gradients[i % 3]}
-          category={post.data.category}
-        />
-      ))}
-    </div>
-  </div>
+    <div class="rule-thick pt-7"></div>
+
+    <TagBar tags={allTags} active={tag === 'all' ? undefined : tag} />
+  </section>
 </BaseLayout>
