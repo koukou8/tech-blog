@@ -1,0 +1,53 @@
+name: PR Checks
+
+on:
+  pull_request:
+    branches: [staging, main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: checks-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  release-source:
+    name: Release source
+    runs-on: ubuntu-latest
+    steps:
+      - name: Only promote staging to main
+        if: github.base_ref == 'main'
+        env:
+          HEAD_BRANCH: ${{ github.head_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          if [ "$HEAD_BRANCH" != staging ] || [ "$HEAD_REPO" != "$REPOSITORY" ]; then
+            echo 'Production PRs must come from this repository staging branch.' >&2
+            exit 1
+          fi
+
+  build:
+    name: Build (${{ matrix.target }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [staging, production]
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Build
+        env:
+          DEPLOY_TARGET: ${{ matrix.target }}
+          PAGES_BASE_PATH: /tech-blog
+          PAGES_ORIGIN: https://koukou8.github.io
+        run: npm run build
+      - name: Verify generated pages
+        run: npm run check:build -- --target ${{ matrix.target }} --base /tech-blog

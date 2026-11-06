@@ -1,4 +1,5 @@
 ---
+import { siteUrl } from '../../lib/site-url';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getCollection, render } from 'astro:content';
 
@@ -47,7 +48,7 @@ const defaultTagColor = { bg: 'bg-accent-light', text: 'text-accent-dark' };
       <article class="animate-slide-up min-w-0">
         {post.data.image && (
           <div class="mb-8 overflow-hidden rounded-2xl border-2 border-fg shadow-[3px_3px_0_var(--color-fg)]">
-            <img src={post.data.image} alt={post.data.title} class="h-[300px] w-full object-cover max-sm:h-[200px]" />
+            <img src={siteUrl(post.data.image)} alt={post.data.title} class="h-[300px] w-full object-cover max-sm:h-[200px]" />
           </div>
         )}
         <header class="mb-10">
@@ -72,7 +73,7 @@ const defaultTagColor = { bg: 'bg-accent-light', text: 'text-accent-dark' };
             {post.data.tags.map((tag: string) => {
               const colors = tagColorMap[tag] || defaultTagColor;
               return (
-                <a href={`/tags/${tag}`} class={`rounded-lg px-2.5 py-1 font-mono text-[0.62rem] no-underline ${colors.bg} ${colors.text}`}>
+                <a href={siteUrl(`/tags/${tag}`)} class={`rounded-lg px-2.5 py-1 font-mono text-[0.62rem] no-underline ${colors.bg} ${colors.text}`}>
                   {tag}
                 </a>
               );
@@ -87,13 +88,13 @@ const defaultTagColor = { bg: 'bg-accent-light', text: 'text-accent-dark' };
         <!-- Prev/Next -->
         <nav class="mt-16 grid grid-cols-2 gap-4 max-sm:grid-cols-1">
           {prevPost && (
-            <a href={`/articles/${prevPost.id}`} class="card-hover flex flex-col rounded-2xl border-2 border-fg bg-bg-card p-5 no-underline shadow-[3px_3px_0_var(--color-fg)]">
+            <a href={siteUrl(`/articles/${prevPost.id}`)} class="card-hover flex flex-col rounded-2xl border-2 border-fg bg-bg-card p-5 no-underline shadow-[3px_3px_0_var(--color-fg)]">
               <span class="mb-1 text-[0.68rem] font-semibold text-fg-muted">&larr; Prev</span>
               <span class="font-heading text-[0.9rem] font-bold text-fg">{prevPost.data.title}</span>
             </a>
           )}
           {nextPost && (
-            <a href={`/articles/${nextPost.id}`} class="card-hover flex flex-col rounded-2xl border-2 border-fg bg-bg-card p-5 no-underline shadow-[3px_3px_0_var(--color-fg)] max-sm:col-start-1" style={!prevPost ? "grid-column-start: 2;" : ""}>
+            <a href={siteUrl(`/articles/${nextPost.id}`)} class="card-hover flex flex-col rounded-2xl border-2 border-fg bg-bg-card p-5 no-underline shadow-[3px_3px_0_var(--color-fg)] max-sm:col-start-1" style={!prevPost ? "grid-column-start: 2;" : ""}>
               <span class="mb-1 text-[0.68rem] font-semibold text-fg-muted">Next &rarr;</span>
               <span class="font-heading text-[0.9rem] font-bold text-fg">{nextPost.data.title}</span>
             </a>
