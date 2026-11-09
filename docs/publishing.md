@@ -48,7 +48,7 @@ After the plan issue is resolved:
 
 ## Production: Cloudflare Workers
 
-- Worker name remains the existing `tech-blog-temp` in `wrangler.jsonc`.
+- The production Worker name is `tech-blog` in `wrangler.jsonc`. The first production deployment creates or updates this Worker. Keep the old `tech-blog-temp` Worker until the new deployment and any domain migration have been verified; changing the name does not migrate its bindings, secrets, or domains.
 - Only pushes to `main` deploy. The production environment is named `production`.
 - Register `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as production environment or repository secrets.
 - The token needs the permissions required to deploy this Worker; use a scoped token for the intended account.
