@@ -1,4 +1,5 @@
 ---
+import { siteUrl } from '../lib/site-url';
 interface Props {
   tags: string[];
 }
@@ -10,7 +11,7 @@ const { tags } = Astro.props;
   <div class="flex flex-wrap gap-1.5">
     {tags.map((tag) => (
       <a
-        href={`/tags/${tag}`}
+        href={siteUrl(`/tags/${tag}`)}
         class="whitespace-nowrap rounded-full border-2 border-border px-3 py-1 font-mono text-[0.66rem] text-fg-secondary no-underline transition-all hover:border-accent hover:bg-accent-light hover:text-accent-dark"
       >
         {tag}

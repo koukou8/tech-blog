@@ -1,6 +1,6 @@
 {
 	"main": "dist/_worker.js/index.js",
-	"name": "tech-blog-temp",
+	"name": "tech-blog",
   "compatibility_date": "2026-02-02",
   "compatibility_flags": [
     "nodejs_compat",

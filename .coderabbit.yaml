@@ -1,0 +1,22 @@
+# yaml-language-server: $schema=https://coderabbit.ai/integrations/schema.v2.json
+language: ja-JP
+reviews:
+  profile: chill
+  request_changes_workflow: true
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - '^staging$'
+      - '^main$'
+  path_instructions:
+    - path: 'src/content/blog/**/*.md'
+      instructions: >-
+        日本語技術ブログとして、事実の裏付け、手順の再現性、frontmatterの
+        スキーマ適合、文体、リンクと画像の実在をレビューしてください。
+        実体験や数値を捏造しないでください。根拠のない仕様・料金の断定を指摘してください。
+    - path: '.github/workflows/*.yml'
+      instructions: >-
+        stagingはGitHub Pages、本番mainはCloudflare Workersです。
+        staging用noindexやサブパスが本番に混入しないか、PRからSecretを利用しないか、
+        mainへの昇格元が同じリポジトリのstagingかを確認してください。
