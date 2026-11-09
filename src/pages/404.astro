@@ -1,0 +1,11 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { siteUrl } from '../lib/site-url';
+---
+
+<BaseLayout title="ページが見つかりません — DEV LOG">
+  <main class="mx-auto max-w-[1200px] px-8 py-16">
+    <h1 class="mb-4 text-2xl font-bold">ページが見つかりません</h1>
+    <a href={siteUrl('/')}>トップページへ</a>
+  </main>
+</BaseLayout>

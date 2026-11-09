@@ -1,4 +1,5 @@
 ---
+import { siteUrl } from '../../lib/site-url';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import ArticleCard from '../../components/ArticleCard.astro';
 import { getCollection } from 'astro:content';
@@ -60,7 +61,7 @@ const gradients: Array<'v1' | 'v2' | 'v3'> = ['v1', 'v2', 'v3'];
     <!-- Tag navigation -->
     <div class="mb-8 flex flex-wrap gap-1.5">
       <a
-        href="/tags/all"
+        href={siteUrl('/tags/all')}
         class:list={[
           "whitespace-nowrap rounded-full border-2 px-3 py-1 font-mono text-[0.66rem] no-underline transition-all",
           tag === 'all'
@@ -72,7 +73,7 @@ const gradients: Array<'v1' | 'v2' | 'v3'> = ['v1', 'v2', 'v3'];
       </a>
       {allTags.map((t) => (
         <a
-          href={`/tags/${t}`}
+          href={siteUrl(`/tags/${t}`)}
           class:list={[
             "whitespace-nowrap rounded-full border-2 px-3 py-1 font-mono text-[0.66rem] no-underline transition-all",
             tag === t

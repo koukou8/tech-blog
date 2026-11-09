@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import { siteUrl } from '../lib/site-url';
 
 interface Props {
   title: string;
@@ -9,6 +10,7 @@ interface Props {
 }
 
 const { title, description = 'Web開発・クラウド・設計パターンについて、実務で得た知見を共有するテックブログです。' } = Astro.props;
+const isStaging = import.meta.env.DEPLOY_TARGET === 'staging';
 ---
 
 <!DOCTYPE html>
@@ -17,7 +19,8 @@ const { title, description = 'Web開発・クラウド・設計パターンに�
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content={description} />
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  {isStaging && <meta name="robots" content="noindex, nofollow, noarchive" />}
+  <link rel="icon" type="image/svg+xml" href={siteUrl('/favicon.svg')} />
   <title>{title}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

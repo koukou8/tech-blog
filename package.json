@@ -5,6 +5,9 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:staging": "DEPLOY_TARGET=staging astro build",
+    "check:build": "python3 scripts/check-build.py",
+    "test": "node --test scripts/staging-links.test.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
