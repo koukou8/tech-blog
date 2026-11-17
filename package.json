@@ -4,10 +4,14 @@
   "version": "0.0.1",
   "scripts": {
     "dev": "astro dev",
+    "dev:db": "wrangler d1 migrations apply IDEAS_DB --local --config wrangler.local.jsonc",
+    "check": "astro check",
+    "check:admin": "astro check --tsconfig tsconfig.admin.json",
+    "deploy:config": "node scripts/deploy-config.mjs",
     "build": "astro build",
     "build:staging": "DEPLOY_TARGET=staging astro build",
     "check:build": "python3 scripts/check-build.py",
-    "test": "node --test scripts/staging-links.test.mjs",
+    "test": "node --test scripts/staging-links.test.mjs scripts/deploy-config.test.mjs && tsx --test tests/admin/*.test.ts",
     "preview": "astro preview",
     "astro": "astro"
   },
@@ -15,6 +19,17 @@
     "@astrojs/cloudflare": "^12.6.12",
     "@tailwindcss/vite": "^4.1.18",
     "astro": "^5.17.1",
-    "tailwindcss": "^4.1.18"
+    "jose": "^6.2.17",
+    "lucide": "^1.72.0",
+    "tailwindcss": "^4.1.18",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "@cloudflare/workers-types": "^4.20260131.0",
+    "@types/node": "^26.6.6",
+    "tsx": "^4.23.15",
+    "typescript": "~5.9.3",
+    "wrangler": "^4.50.0"
   }
 }

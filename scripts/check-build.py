@@ -54,6 +54,12 @@ def main():
                     errors.append(f"{file}: missing asset: {value}")
     if args.target == "staging" and (root / "_worker.js").exists():
         errors.append("Cloudflare worker output included in Pages build")
+    if (root / "admin" / "index.html").exists():
+        errors.append("Private admin page must never be prerendered")
+    if args.target == "staging":
+        for file in (root / "_astro").glob("*.js"):
+            if "IdeaAdmin" in file.read_text():
+                errors.append(f"{file}: admin client included in Pages build")
     if errors:
         raise SystemExit("\n".join(errors))
     print(f"Verified {len(pages)} HTML pages ({args.target})")

@@ -79,6 +79,9 @@ Protection/ruleset availability depends on the GitHub plan for this private repo
 
 ## Local verification
 
+For the private article-ideas admin, D1 provisioning and path-scoped Access setup, see [admin-setup.md](admin-setup.md).
+GitHub Pages still builds only the static public blog; admin acceptance is local until the production resources are configured.
+
 Use Node.js 22 or newer (CI uses 22).
 
 ```bash

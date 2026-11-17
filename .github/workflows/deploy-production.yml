@@ -36,8 +36,14 @@ jobs:
         env:
           DEPLOY_TARGET: production
       - run: npm run check:build -- --target production
+      - run: npm run deploy:config
+        env:
+          IDEAS_DB_ID: ${{ vars.IDEAS_DB_ID }}
+          ADMIN_ACCESS_ISSUER: ${{ vars.ADMIN_ACCESS_ISSUER }}
+          ADMIN_ACCESS_AUD: ${{ vars.ADMIN_ACCESS_AUD }}
+          ADMIN_OWNER_EMAIL: ${{ vars.ADMIN_OWNER_EMAIL }}
       - uses: cloudflare/wrangler-action@v4
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: deploy
+          command: deploy --config wrangler.deploy.jsonc
