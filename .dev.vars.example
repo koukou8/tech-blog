@@ -1,0 +1,2 @@
+# Only used by local development. Production ignores this bypass.
+ADMIN_DEV_AUTH=true

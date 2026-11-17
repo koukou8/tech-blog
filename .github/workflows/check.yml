@@ -43,6 +43,8 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
+      - run: npm run check:admin
+        if: matrix.target == 'production'
       - name: Build
         env:
           DEPLOY_TARGET: ${{ matrix.target }}

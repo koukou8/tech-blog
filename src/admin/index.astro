@@ -1,0 +1,81 @@
+---
+import './admin.css';
+import { authorize, privateHeaders } from './auth';
+import { AdminError } from './types';
+export const prerender = false;
+let identity;
+try {
+  identity = await authorize(Astro.request, Astro.locals.runtime?.env || {}, { localDevelopment: import.meta.env.DEV });
+} catch (error) {
+  const status = error instanceof AdminError ? error.status : 503;
+  const message = error instanceof AdminError ? error.message : '認証を確認できませんでした。';
+  return new Response(`<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="robots" content="noindex"><title>記事アイデア</title><h1>${message}</h1><p><a href="/cdn-cgi/access/login?redirect_url=%2Fadmin%2F">ログイン</a></p><p><a href="/">ブログへ戻る</a></p></html>`, { status, headers: { ...privateHeaders, 'Content-Type': 'text/html; charset=utf-8' } });
+}
+Object.entries(privateHeaders).forEach(([key, value]) => Astro.response.headers.set(key, value));
+---
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>記事アイデア | DEV LOG</title>
+    <link rel="icon" href="/favicon.svg" />
+  </head>
+  <body>
+    <div id="idea-app" class="admin-shell" data-email={identity.email}>
+      <aside class="sidebar" aria-label="管理ナビゲーション">
+        <a href="/admin/" class="brand"><span class="brand-mark">D</span><span>DEV LOG<small>記事アイデア</small></span></a>
+        <a href="/" class="blog-link"><i data-lucide="external-link"></i>ブログを開く</a>
+        <div class="nav-caption">ステータス</div>
+        <nav id="status-nav" aria-label="進行状況">
+          <button class="nav-item active" data-status=""><i data-lucide="inbox"></i>すべて<span data-count="all">0</span></button>
+          <button class="nav-item" data-status="idea"><span class="status-dot idea"></span>アイデア<span data-count="idea">0</span></button>
+          <button class="nav-item" data-status="research"><span class="status-dot research"></span>調査中<span data-count="research">0</span></button>
+          <button class="nav-item" data-status="writing"><span class="status-dot writing"></span>執筆中<span data-count="writing">0</span></button>
+          <button class="nav-item" data-status="done"><span class="status-dot done"></span>記事化済み<span data-count="done">0</span></button>
+        </nav>
+        <div class="nav-caption">タグ</div>
+        <div id="sidebar-tags" class="sidebar-tags"><span class="muted">まだありません</span></div>
+        <div class="account"><span class="avatar"><i data-lucide="user-round"></i></span><div><span class="account-name">マイワークスペース</span><span class="account-email" title={identity.email}>{identity.email}</span></div><a href="/cdn-cgi/access/logout" title="ログアウト" aria-label="ログアウト" class="icon-button"><i data-lucide="log-out"></i></a></div>
+      </aside>
+      <main class="workspace">
+        <header class="workspace-header"><div class="heading"><span class="section-mark"><i data-lucide="notebook-pen"></i></span><h1>記事アイデア</h1><span id="total-count" class="total-count">0件</span></div><button id="new-idea" class="button primary"><i data-lucide="plus"></i><span>新しいアイデア</span></button></header>
+        <div id="notice" class="notice" role="alert" hidden><span id="notice-text"></span><button id="retry" class="text-button" type="button">再読込</button><a id="login-again" href="/admin/" hidden>再ログイン</a><button id="dismiss-notice" class="icon-button" aria-label="通知を閉じる"><i data-lucide="x"></i></button></div>
+        <div class="workbench">
+          <section class="queue" aria-label="アイデア一覧">
+            <div class="queue-tools">
+              <label class="search"><i data-lucide="search"></i><input id="search" type="search" placeholder="アイデアを検索" aria-label="アイデアを検索" maxlength="200" /></label>
+              <div class="filter-row">
+                <select id="status-filter" aria-label="ステータスで絞り込み"><option value="">すべてのステータス</option><option value="idea">アイデア</option><option value="research">調査中</option><option value="writing">執筆中</option><option value="done">記事化済み</option></select>
+                <select id="sort" aria-label="並び順"><option value="updated">更新が新しい順</option><option value="created">作成が新しい順</option><option value="title">タイトル順</option></select>
+              </div>
+              <select id="mobile-tag-filter" class="mobile-tag-filter" aria-label="タグで絞り込み"><option value="">すべてのタグ</option></select>
+              <div id="active-tag" class="active-tag" hidden><span id="active-tag-name"></span><button id="clear-tag" class="icon-button" aria-label="タグの絞り込みを解除"><i data-lucide="x"></i></button></div>
+            </div>
+            <div id="idea-list" class="idea-list" aria-live="polite" aria-busy="true"><div class="list-state">読み込んでいます…</div></div>
+            <div class="pagination"><span id="page-label"></span><div class="mobile-account-links"><a href="/" class="icon-button" title="ブログを開く" aria-label="ブログを開く"><i data-lucide="external-link"></i></a><a href="/cdn-cgi/access/logout" class="icon-button" title="ログアウト" aria-label="ログアウト"><i data-lucide="log-out"></i></a></div><div><button id="prev-page" class="icon-button" aria-label="前のページ" disabled><i data-lucide="chevron-left"></i></button><button id="next-page" class="icon-button" aria-label="次のページ" disabled><i data-lucide="chevron-right"></i></button></div></div>
+          </section>
+          <section class="editor" aria-label="アイデアの編集">
+            <div id="editor-empty" class="editor-empty"><span class="empty-icon"><i data-lucide="notebook-pen"></i></span><h2>アイデアが選択されていません</h2><button id="empty-new" class="button secondary"><i data-lucide="plus"></i>新しいアイデア</button></div>
+            <form id="idea-form" hidden>
+              <div class="editor-toolbar"><div class="editor-label"><button id="back-list" class="icon-button mobile-back" type="button" title="一覧に戻る" aria-label="一覧に戻る"><i data-lucide="arrow-left"></i></button><span id="editor-mode">編集中</span><span id="save-state" class="save-state" aria-live="polite">保存済み</span></div><div class="editor-actions"><button id="delete-idea" class="icon-button danger" type="button" title="アイデアを削除" aria-label="アイデアを削除"><i data-lucide="trash-2"></i></button><button id="save-idea" class="button primary" type="submit"><i data-lucide="check"></i><span>保存</span></button></div></div>
+              <fieldset id="editor-fields" class="editor-fields">
+                <label class="field title-field"><span>タイトル <span class="required">*</span></span><textarea id="title" rows="2" maxlength="180" required placeholder="アイデアのタイトル"></textarea></label>
+                <label class="field"><span>ステータス</span><select id="idea-status"><option value="idea">アイデア</option><option value="research">調査中</option><option value="writing">執筆中</option><option value="done">記事化済み</option></select></label>
+                <div class="field"><span id="tag-label">タグ</span><div id="editor-tags" class="tag-chips"></div><div class="tag-add"><input id="tag-input" aria-labelledby="tag-label" maxlength="40" placeholder="タグ名" /><button id="add-tag" type="button" class="icon-button" title="タグを追加" aria-label="タグを追加"><i data-lucide="plus"></i></button></div></div>
+                <label class="field"><span>メモ</span><textarea id="notes" rows="10" maxlength="50000" placeholder="書きたいこと、気づいたこと、調べたいこと"></textarea></label>
+                <div class="field"><span id="references-label">参考リンク</span><div id="references" class="reference-list"></div><button id="add-reference" class="text-button add-reference" type="button"><i data-lucide="plus"></i>リンクを追加</button></div>
+                <div class="editor-meta"><span id="updated-at"></span><span id="created-at"></span></div>
+              </fieldset>
+            </form>
+          </section>
+        </div>
+      </main>
+    </div>
+    <dialog id="delete-dialog"><form method="dialog"><button class="icon-button dialog-close" aria-label="閉じる" value="cancel"><i data-lucide="x"></i></button><span class="dialog-symbol"><i data-lucide="trash-2"></i></span><h2>アイデアを削除しますか？</h2><p id="delete-title" class="dialog-idea-title"></p><p class="muted">この操作は取り消せません。</p><div class="dialog-actions"><button class="button secondary" value="cancel" autofocus>キャンセル</button><button class="button destructive" value="delete"><i data-lucide="trash-2"></i>削除する</button></div></form></dialog>
+    <dialog id="discard-dialog"><form method="dialog"><h2>変更を破棄しますか？</h2><p>保存していない変更があります。</p><div class="dialog-actions"><button class="button secondary" value="cancel" autofocus>編集を続ける</button><button class="button destructive" value="discard">破棄する</button></div></form></dialog>
+    <div id="toast" class="toast" role="status" hidden></div>
+    <script>import './client';</script>
+  </body>
+</html>
